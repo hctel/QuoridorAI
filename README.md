@@ -6,3 +6,11 @@ Le fichier Main.py contient la classe principale du programme. C'est dans celle-
 
 ### Classe Network
 Cette classe gère la connection réseau avec le gestionnaire de partie (GP). Elle se comporte en tant que client pour l'inscription de notre client auprès du GP, puis en tant que serveur pour répondre entre autres aux requètes de ping et de coup.
+
+
+
+
+
+## Membres du groupe
+ - [Victor DEUVAERT](https://github.com/22054) (22054)
+ - [Hugo de HEPCÉE](https://github.com/hctel) (22167) 
