@@ -42,8 +42,8 @@ class Network:
                     sentBytes+=sent 
                 client.close()
             else:
-                js = json.loads(received, client)
-                self.__inDef(js)
+                js = json.loads(received)
+                self.__inDef(js, client)
                 client.close()
     
     def __init__(self, serverIP, serverPort, inPort, inDef):
