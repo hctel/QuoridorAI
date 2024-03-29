@@ -42,8 +42,9 @@ class Network:
                     sentBytes+=sent 
                 client.close()
             else:
-                js = json.loads(received)
+                js = json.loads(received, client)
                 self.__inDef(js)
+                client.close()
     
     def __init__(self, serverIP, serverPort, inPort, inDef):
         if not isinstance(serverIP, str) and not isinstance(serverPort, int) and not isinstance(inPort, int) and callable(inDef):
