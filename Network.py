@@ -41,15 +41,19 @@ class Network:
                     sent = client.send(data[sentBytes:])
                     sentBytes+=sent 
                 client.close()
+            else:
+                js = json.loads(received)
+                self.__inDef(js)
     
-    def __init__(self, serverIP, serverPort, inPort):
-        if not isinstance(serverIP, str) and not isinstance(serverPort, int):
+    def __init__(self, serverIP, serverPort, inPort, inDef):
+        if not isinstance(serverIP, str) and not isinstance(serverPort, int) and not isinstance(inPort, int) and callable(inDef):
             raise TypeError
             return
         self.__address = (serverIP, serverPort)
         self.__rcvAddress = ("0.0.0.0", inPort)
         self.__socket = socket.socket()
         self.__socket.connect(self.__address)
+        self.__inDef = inDef
         data = subscribeRequest.format(inPort).encode("utf8")
         sentBytes = 0
         while sentBytes < len(data):
@@ -81,8 +85,5 @@ class Network:
     def isSubscribed(self):
         return self.__subscribed
         
-network = Network("localhost", 3000, 3001)
-print(network.isSubscribed)
-while True:
-    time.sleep(1)
+
     
