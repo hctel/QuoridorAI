@@ -34,3 +34,11 @@ class Node:
 		self.y = y
 		self.cost = cost
 		self.heuristic = heuristic
+
+def compByHeuristic(n1:Node, n2:Node):
+       if n1.heuristic < n2.heuristic:
+           return 1
+       elif n1.heuristic == n2.heuristic:
+           return 0
+       else:
+           return -1
