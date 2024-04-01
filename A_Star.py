@@ -27,3 +27,10 @@ def getPlayerPos(board, me):
 			if board[y][x] == me:
 				return x, y
 	return None
+
+class Node:
+	def __init__(self, x, y, cost, heuristic):
+		self.x = x
+		self.y = y
+		self.cost = cost
+		self.heuristic = heuristic
