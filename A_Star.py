@@ -20,3 +20,10 @@ test_input = {
              [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
+
+def getPlayerPos(board, me):
+	for y in range(len(board)):
+		for x in range(len(board[0])):
+			if board[y][x] == me:
+				return x, y
+	return None
