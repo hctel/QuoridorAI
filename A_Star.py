@@ -94,7 +94,23 @@ def A_Star(board, me):
 		end = Node(8, 0) # target UP
 	return shortestPath(board, end, start)
 
+def displayPath(board, path):
+	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
+	display = [[0]*17 for _ in range(17)]
+
+	for y in range(len(board)):
+		for x in range(len(board[0])):
+			display[y][x] = table[board[y][x]]
+	for n in path:
+		display[n.y][n.x] = n.cost
+
+	for y in range(len(board)):
+		for x in range(len(board[0])):
+			print(display[y][x], end=' ')
+		print('')
+
 p1 = test_input["current"]
 board = test_input["board"]
-dist = A_Star(board, p1)
-print(f'player : {p1}\nshortest_path : {dist}')
+path = A_Star(board, p1)
+print(f'player : {p1}\nshortest_path : {path}')
+displayPath(board, path)
