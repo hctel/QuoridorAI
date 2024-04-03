@@ -92,3 +92,8 @@ def A_Star(board, me):
 	elif me == 1.0: # color 2
 		end = Node(8, 0) # target UP
 	return shortestPath(board, end, start)
+
+p1 = test_input["current"]
+board = test_input["board"]
+dist = A_Star(board, p1)
+print(f'player : {p1}\nshortest_path : {dist}')
