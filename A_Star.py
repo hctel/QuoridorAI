@@ -37,9 +37,10 @@ class Node:
 		self.cost = cost
 		self.heuristic = heuristic
 	def __str__(self):
-		return f"x:{self.x} y:{self.y}"
+		return f"(x:{self.x} y:{self.y})"
 	def __repr__(self):
-		return f"x:{self.x} y:{self.y} c:{self.cost} h:{self.heuristic}"
+		return f"(x:{self.x} y:{self.y})"
+		#return f"x:{self.x} y:{self.y} c:{self.cost} h:{self.heuristic}"
 
 def compByHeuristic(n1:Node, n2:Node):
 	if n1.heuristic < n2.heuristic:
