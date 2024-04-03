@@ -83,3 +83,12 @@ def shortestPath(graph, target:Node, start:Node):
 		closedList.append(u)
 	print("Error no path found")
 	return None
+
+def A_Star(board, me):
+	x, y = getPlayerPos(board, me)
+	start = Node(x, y, 0, 0)
+	if me == 0.0: # color 1
+		end = Node(8, 16) # target DOWN
+	elif me == 1.0: # color 2
+		end = Node(8, 0) # target UP
+	return shortestPath(board, end, start)
