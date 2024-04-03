@@ -61,3 +61,25 @@ def getNeighbors(n:Node, graph):
 		neighbors.append(Node(n.x+2, n.y))
 	print(f"neighbors: {neighbors}")
 	return neighbors
+
+def shortestPath(graph, target:Node, start:Node):
+	closedList = []
+	openList = []
+	openList.append(start)
+	while len(openList) > 0:
+		openList.sort(key=cmp_to_key(compByHeuristic)) # vérifier si ça fonctionne correctement
+		u = openList.pop()
+		#if (u.x == target.x) and (u.y == target.y):
+		if u.y == target.y: # Qoridor only need 'y' check
+			print("targeted !")
+			path = closedList
+			return path
+		for v in getNeighbors(u, graph):
+			#if not( (v in closedList) or (v in openList avec un coût inférieur) ):
+			if not( (v in closedList) or (v in openList) ):
+				v.cost = u.cost + 1
+				v.heuristic = v.cost + (abs(target.x - v.x) + abs(target.y - v.y))
+				openList.append(v)
+		closedList.append(u)
+	print("Error no path found")
+	return None
