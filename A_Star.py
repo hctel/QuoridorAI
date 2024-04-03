@@ -29,7 +29,7 @@ def getPlayerPos(board, me):
 	return None
 
 class Node:
-	def __init__(self, x, y, cost, heuristic):
+	def __init__(self, x, y, cost=0, heuristic=0):
 		self.x = x
 		self.y = y
 		self.cost = cost
@@ -42,3 +42,15 @@ def compByHeuristic(n1:Node, n2:Node):
 		return 0
 	else:
 		return -1
+	
+def getNeighbors(n:Node, graph):
+	neighbors = []
+	if graph[n.y-2][n.x] == 2.0: # up
+		neighbors.append(Node(n.x, n.y-2))
+	if graph[n.y+2][n.x] == 2.0: # down
+		neighbors.append(Node(n.x, n.y-2))
+	if graph[n.y][n.x-2] == 2.0: # left
+		neighbors.append(Node(n.x, n.y-2))
+	if graph[n.y][n.x+2] == 2.0: # right
+		neighbors.append(Node(n.x, n.y-2))
+	return neighbors
