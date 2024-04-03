@@ -1,3 +1,5 @@
+from functools import cmp_to_key
+
 test_input = {
   "players": ["LUR", "HSL"],
   "current": 0,
@@ -52,9 +54,10 @@ def getNeighbors(n:Node, graph):
 	if graph[n.y-2][n.x] == 2.0: # up
 		neighbors.append(Node(n.x, n.y-2))
 	if graph[n.y+2][n.x] == 2.0: # down
-		neighbors.append(Node(n.x, n.y-2))
+		neighbors.append(Node(n.x, n.y+2))
 	if graph[n.y][n.x-2] == 2.0: # left
-		neighbors.append(Node(n.x, n.y-2))
+		neighbors.append(Node(n.x-2, n.y))
 	if graph[n.y][n.x+2] == 2.0: # right
-		neighbors.append(Node(n.x, n.y-2))
+		neighbors.append(Node(n.x+2, n.y))
+	print(f"neighbors: {neighbors}")
 	return neighbors
