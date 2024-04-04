@@ -78,12 +78,18 @@ def getNeighbors(n:Node, graph):
 	#print(f"neighbors: {neighbors}")
 	return neighbors
 
+def isInListWithInferiorCost(v, openList):
+	for n in openList:
+		if v.x==n.x and v.y==n.y and n.cost<v.cost: #tester dans quel sens mettre la consition < ou >
+			return True
+	return False
+
 def shortestPath(graph, target:Node, start:Node):
 	closedList = []
 	openList = []
 	openList.append(start)
 	while len(openList) > 0:
-		openList.sort(key=cmp_to_key(compByHeuristic)) # vérifier si ça fonctionne correctement
+		openList.sort(key=cmp_to_key(compByHeuristic))
 		u = openList.pop()
 		#if (u.x == target.x) and (u.y == target.y):
 		if u.y == target.y: # Qoridor only need 'y' check
@@ -92,8 +98,8 @@ def shortestPath(graph, target:Node, start:Node):
 			path = closedList
 			return path
 		for v in getNeighbors(u, graph):
-			#if not( (v in closedList) or (v in openList avec un coût inférieur) ):
-			if not( (v in closedList) or (v in openList) ):
+			#if not(v in closedList):
+			if not( (v in closedList) or (isInListWithInferiorCost(v, openList)) ):
 				v.cost = u.cost + 1
 				v.heuristic = v.cost + abs(target.y - v.y)
 				openList.append(v)
