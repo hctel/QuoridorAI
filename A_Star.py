@@ -124,9 +124,3 @@ def displayPath(board, path):
 		for x in range(len(board[0])):
 			print(display[y][x], end=' ')
 		print('')
-
-p1 = test_input["current"]
-board = test_input["board"]
-path = A_Star(board, p1)
-print(f'player : {p1}\nshortest_path : {path}')
-displayPath(board, path)
