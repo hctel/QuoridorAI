@@ -118,7 +118,7 @@ def displayPath(board, path):
 		for x in range(len(board[0])):
 			display[y][x] = table[board[y][x]]
 	for n in path:
-		display[n.y][n.x] = n.cost
+		display[n.y][n.x] = n.cost%10 # always 1 digit
 
 	for y in range(len(board)):
 		for x in range(len(board[0])):
