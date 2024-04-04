@@ -88,6 +88,7 @@ def shortestPath(graph, target:Node, start:Node):
 		#if (u.x == target.x) and (u.y == target.y):
 		if u.y == target.y: # Qoridor only need 'y' check
 			print("targeted !")
+			closedList.append(u)
 			path = closedList
 			return path
 		for v in getNeighbors(u, graph):
