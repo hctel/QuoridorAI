@@ -36,6 +36,8 @@ class Node:
 		self.y = y
 		self.cost = cost
 		self.heuristic = heuristic
+	def __eq__(self, other):
+		return self.x==other.x and self.y==other.y
 	def __str__(self):
 		return f"(x:{self.x} y:{self.y})"
 	def __repr__(self):
