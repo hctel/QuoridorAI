@@ -71,11 +71,11 @@ test_input3 = {
 }
 
 def test_A_Star():
-	#path1 = A_Star.A_Star(test_input1["board"], test_input1["current"])
-	#A_Star.displayPath(test_input1["board"], path1)
+	path1 = A_Star.A_Star(test_input1["board"], test_input1["current"])
+	A_Star.displayPath(test_input1["board"], path1)
 
-	#path2 = A_Star.A_Star(test_input2["board"], test_input2["current"])
-	#A_Star.displayPath(test_input2["board"], path2)
+	path2 = A_Star.A_Star(test_input2["board"], test_input2["current"])
+	A_Star.displayPath(test_input2["board"], path2)
 
 	path3 = A_Star.A_Star(test_input3["board"], test_input3["current"])
 	A_Star.displayPath(test_input3["board"], path3)
