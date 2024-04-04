@@ -101,7 +101,8 @@ def shortestPath(graph, target:Node, start:Node):
 			#if not(v in closedList):
 			if not( (v in closedList) or (isInListWithInferiorCost(v, openList)) ):
 				v.cost = u.cost + 1
-				v.heuristic = v.cost + abs(target.y - v.y)
+				v.heuristic = v.cost + abs(target.y - v.y) # A*
+				#v.heuristic = v.cost # Dijkstra
 				openList.append(v)
 		closedList.append(u)
 	print("Error no path found")
