@@ -36,6 +36,8 @@ class Node:
 		self.y = y
 		self.cost = cost
 		self.heuristic = heuristic
+	def __eq__(self, other):
+		return self.x==other.x and self.y==other.y
 	def __str__(self):
 		return f"(x:{self.x} y:{self.y})"
 	def __repr__(self):
@@ -52,14 +54,27 @@ def compByHeuristic(n1:Node, n2:Node):
 	
 def getNeighbors(n:Node, graph):
 	neighbors = []
-	if (graph[n.y-1][n.x] == 3.0) and (graph[n.y-2][n.x] == 2.0): # up
-		neighbors.append(Node(n.x, n.y-2))
-	if (graph[n.y+1][n.x] == 3.0) and (graph[n.y+2][n.x] == 2.0): # down
-		neighbors.append(Node(n.x, n.y+2))
-	if (graph[n.y][n.x-1] == 3.0) and (graph[n.y][n.x-2] == 2.0): # left
-		neighbors.append(Node(n.x-2, n.y))
-	if (graph[n.y][n.x+1] == 3.0) and (graph[n.y][n.x+2] == 2.0): # right
-		neighbors.append(Node(n.x+2, n.y))
+	# (try > if) car plus efficace si (except < 50%)
+	try:
+		if (graph[n.y-1][n.x] == 3.0) and (graph[n.y-2][n.x] == 2.0): # up
+			neighbors.append(Node(n.x, n.y-2))
+	except:
+		pass
+	try:
+		if (graph[n.y+1][n.x] == 3.0) and (graph[n.y+2][n.x] == 2.0): # down
+			neighbors.append(Node(n.x, n.y+2))
+	except:
+		pass
+	try:
+		if (graph[n.y][n.x-1] == 3.0) and (graph[n.y][n.x-2] == 2.0): # left
+			neighbors.append(Node(n.x-2, n.y))
+	except:
+		pass
+	try:
+		if (graph[n.y][n.x+1] == 3.0) and (graph[n.y][n.x+2] == 2.0): # right
+			neighbors.append(Node(n.x+2, n.y))
+	except:
+		pass
 	#print(f"neighbors: {neighbors}")
 	return neighbors
 
@@ -73,6 +88,7 @@ def shortestPath(graph, target:Node, start:Node):
 		#if (u.x == target.x) and (u.y == target.y):
 		if u.y == target.y: # Qoridor only need 'y' check
 			print("targeted !")
+			closedList.append(u)
 			path = closedList
 			return path
 		for v in getNeighbors(u, graph):
