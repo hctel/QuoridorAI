@@ -95,7 +95,7 @@ def shortestPath(graph, target:Node, start:Node):
 			#if not( (v in closedList) or (v in openList avec un coût inférieur) ):
 			if not( (v in closedList) or (v in openList) ):
 				v.cost = u.cost + 1
-				v.heuristic = v.cost + (abs(target.x - v.x) + abs(target.y - v.y))
+				v.heuristic = v.cost + abs(target.y - v.y)
 				openList.append(v)
 		closedList.append(u)
 	print("Error no path found")
