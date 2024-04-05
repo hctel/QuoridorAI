@@ -91,10 +91,6 @@ def shortestPath(graph, target:Node, start:Node):
 					v.parent = u
 					if v not in openList:
 						openList.append(v)
-		displayPath(graph, closedList)
-		print(closedList)
-		print(u, u.cost)
-		input()
 	print("Error no path found")
 	return None
 
