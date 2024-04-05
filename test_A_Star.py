@@ -1,5 +1,5 @@
 import pytest
-import A_Star
+from A_Star import *
 
 test_input1 = {
   "players": ["LUR", "HSL"],
@@ -71,13 +71,19 @@ test_input3 = {
 }
 
 def test_A_Star():
-	path1 = A_Star.A_Star(test_input1["board"], test_input1["current"])
-	A_Star.displayPath(test_input1["board"], path1)
+	path1 = A_Star(test_input1["board"], test_input1["current"])
+	assert path1 == [Node(6,0),Node(6,2),Node(6,4),Node(6,6),Node(6,8),Node(6,10),Node(6,12),Node(6,14),Node(6,16)]
+	displayPath(test_input1["board"], path1)
+	print(path1)
 
-	path2 = A_Star.A_Star(test_input2["board"], test_input2["current"])
-	A_Star.displayPath(test_input2["board"], path2)
+	path2 = A_Star(test_input2["board"], test_input2["current"])
+	assert path2 == [Node(6,0),Node(4,0),Node(2,0),Node(2,2),Node(2,4),Node(2,6),Node(2,8),Node(2,10),Node(2,12),Node(2,14),Node(2,16)]
+	displayPath(test_input2["board"], path2)
+	print(path2)
 
-	path3 = A_Star.A_Star(test_input3["board"], test_input3["current"])
-	A_Star.displayPath(test_input3["board"], path3)
+	path3 = A_Star(test_input3["board"], test_input3["current"])
+	assert path3 == [Node(10,0),Node(12,0),Node(14,0),Node(16,0),Node(16,2),Node(16,4),Node(16,6),Node(16,8),Node(16,10),Node(16,12),Node(16,14),Node(14,14),Node(12,14),Node(10,14),Node(8,14),Node(6,14),Node(4,14),Node(2,14),Node(0,14),Node(0,16)]
+	displayPath(test_input3["board"], path3)
+	print(path3)
 
 test_A_Star()
