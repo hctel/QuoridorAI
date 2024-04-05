@@ -70,6 +70,10 @@ test_input3 = {
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
 
+def test_getPlayerPos():
+  assert getPlayerPos(test_input1["board"], 0.0) == (8, 0)  # X, Y
+  assert getPlayerPos(test_input1["board"], 1.0) == (8, 16) # X, Y
+
 def test_A_Star():
 	path1 = A_Star(test_input1["board"], test_input1["current"])
 	assert path1 == [Node(6,0),Node(6,2),Node(6,4),Node(6,6),Node(6,8),Node(6,10),Node(6,12),Node(6,14),Node(6,16)]
