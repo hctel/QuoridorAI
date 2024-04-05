@@ -78,7 +78,11 @@ def test_compByHeuristic():
   assert compByHeuristic(Node(0,0,heuristic=5), Node(0,0,heuristic=6)) == 1
   assert compByHeuristic(Node(0,0,heuristic=3), Node(0,0,heuristic=2)) == -1
   assert compByHeuristic(Node(0,0,heuristic=7), Node(0,0,heuristic=7)) == 0
-  
+
+def test_getNeighbors():
+  assert getNeighbors(Node(8,10), test_input1["board"]) == [Node(8,8)]
+  assert getNeighbors(Node(8,14), test_input3["board"]) == [Node(6,14),Node(10,14)]
+
 def test_A_Star():
 	path1 = A_Star(test_input1["board"], test_input1["current"])
 	assert path1 == [Node(6,0),Node(6,2),Node(6,4),Node(6,6),Node(6,8),Node(6,10),Node(6,12),Node(6,14),Node(6,16)]
