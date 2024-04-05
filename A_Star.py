@@ -1,4 +1,5 @@
 from functools import cmp_to_key
+from math import sqrt
 
 def getPlayerPos(board, me):
 	for y in range(len(board)):
@@ -13,6 +14,9 @@ class Node:
 		self.y = y
 		self.cost = cost
 		self.heuristic = heuristic
+		self.parent = None
+	def __hash__(self):
+		return hash((self.x, self.y))
 	def __eq__(self, other):
 		return self.x==other.x and self.y==other.y
 	def __str__(self):
@@ -55,33 +59,42 @@ def getNeighbors(n:Node, graph):
 	#print(f"neighbors: {neighbors}")
 	return neighbors
 
-def isInListWithInferiorCost(v, openList):
-	for n in openList:
-		if v.x==n.x and v.y==n.y and n.cost<v.cost: #tester dans quel sens mettre la consition < ou >
-			return True
-	return False
+def retracePath(startNode, endNode):
+	cleanPath = []
+	currentNode = endNode
+	while (currentNode != startNode):
+		cleanPath.append(currentNode)
+		currentNode = currentNode.parent
+	#cleanPath.Reverse()
+	return cleanPath
 
 def shortestPath(graph, target:Node, start:Node):
-	closedList = []
+	closedList = set()
 	openList = []
 	openList.append(start)
 	while len(openList) > 0:
 		openList.sort(key=cmp_to_key(compByHeuristic))
 		u = openList.pop()
-		#if (u.x == target.x) and (u.y == target.y):
-		if u.y == target.y: # Qoridor only need 'y' check
+		closedList.add(u)
+		if u.y == target.y: # Quoridor only need 'y' check
 			print("targeted !")
-			closedList.append(u)
-			path = closedList
+			path = retracePath(start, u)
 			return path
 		for v in getNeighbors(u, graph):
-			#if not(v in closedList):
-			if not( (v in closedList) or (isInListWithInferiorCost(v, openList)) ):
-				v.cost = u.cost + 1
-				v.heuristic = v.cost + abs(target.y - v.y) # A*
-				#v.heuristic = v.cost # Dijkstra
-				openList.append(v)
-		closedList.append(u)
+			if v not in closedList:
+				newCost = u.cost + 1
+				if (newCost < v.cost) or (v not in openList):
+					v.cost = newCost
+					v.heuristic = v.cost # Dijkstra (simple & effective)
+					#v.heuristic = v.cost + abs(target.y - v.y) # QuoridorA* (effective but buggy/strange)
+					#v.heuristic = v.cost + sqrt(abs(target.x - v.x)**2 + abs(target.y - v.y)**2) # A* (not adapted for Quoridor)
+					v.parent = u
+					if v not in openList:
+						openList.append(v)
+		displayPath(graph, closedList)
+		print(closedList)
+		print(u, u.cost)
+		input()
 	print("Error no path found")
 	return None
 
@@ -102,7 +115,7 @@ def displayPath(board, path):
 		for x in range(len(board[0])):
 			display[y][x] = table[board[y][x]]
 	for n in path:
-		display[n.y][n.x] = n.cost%10 # always 1 digit
+		display[n.y][n.x] = chr(n.cost+97) # always 1 digit
 
 	for y in range(len(board)):
 		for x in range(len(board[0])):
