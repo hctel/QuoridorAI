@@ -1,13 +1,15 @@
 from functools import cmp_to_key
 from math import sqrt
 
+# Return player position on the game board
 def getPlayerPos(board, me):
 	for y in range(len(board)):
 		for x in range(len(board[0])):
 			if board[y][x] == me:
 				return x, y
-	return None
+	return None # not found
 
+# Node class to represent game board as connected Nodes
 class Node:
 	def __init__(self, x, y, cost=0, heuristic=0):
 		self.x = x
@@ -25,6 +27,7 @@ class Node:
 		return f"(x:{self.x} y:{self.y})"
 		#return f"x:{self.x} y:{self.y} c:{self.cost} h:{self.heuristic}"
 
+# Node's heuristics comparator for Nodes sorting
 def compByHeuristic(n1:Node, n2:Node):
 	if n1.heuristic < n2.heuristic:
 		return 1
@@ -32,10 +35,11 @@ def compByHeuristic(n1:Node, n2:Node):
 		return 0
 	else:
 		return -1
-	
+
+# Return list of accessible Nodes
 def getNeighbors(n:Node, graph):
 	neighbors = []
-	# (try > if) car plus efficace si (except < 50%)
+	# (try > if) more efficient if (except happen < 50%)
 	try:
 		if (graph[n.y-1][n.x] == 3.0) and (graph[n.y-2][n.x] == 2.0): # up
 			neighbors.append(Node(n.x, n.y-2))
@@ -59,6 +63,7 @@ def getNeighbors(n:Node, graph):
 	#print(f"neighbors: {neighbors}")
 	return neighbors
 
+# Retrace the final shortest path (A->B)
 def retracePath(startNode, endNode):
 	cleanPath = []
 	currentNode = endNode
@@ -68,7 +73,8 @@ def retracePath(startNode, endNode):
 	cleanPath.reverse()
 	return cleanPath
 
-def shortestPath(graph, target:Node, start:Node):
+# Core of pathfinding algorithm
+def shortestPath(graph, start:Node, target:Node):
 	closedList = set()
 	openList = []
 	openList.append(start)
@@ -94,6 +100,7 @@ def shortestPath(graph, target:Node, start:Node):
 	print("Error no path found")
 	return None
 
+# Global function usable in game
 def A_Star(board, me):
 	x, y = getPlayerPos(board, me)
 	start = Node(x, y, 0, 0)
@@ -101,8 +108,9 @@ def A_Star(board, me):
 		end = Node(8, 16) # target DOWN
 	elif me == 1.0: # color 2
 		end = Node(8, 0) # target UP
-	return shortestPath(board, end, start)
+	return shortestPath(board, start, end)
 
+# Debug function to display path on game board
 def displayPath(board, path):
 	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
 	display = [[0]*17 for _ in range(17)]
