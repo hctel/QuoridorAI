@@ -101,7 +101,7 @@ def shortestPath(graph, start:Node, target:Node):
 	return None
 
 # Global function usable in game
-def A_Star(board, me):
+def Pathfinder(board, me):
 	x, y = getPlayerPos(board, me)
 	start = Node(x, y, 0, 0)
 	if me == 0.0: # color 1
