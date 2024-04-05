@@ -99,4 +99,4 @@ def test_Pathfinder():
 	displayPath(test_input3["board"], path3)
 	print(path3)
 
-test_Pathfinder()
+#test_Pathfinder()
