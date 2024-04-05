@@ -65,7 +65,7 @@ def retracePath(startNode, endNode):
 	while (currentNode != startNode):
 		cleanPath.append(currentNode)
 		currentNode = currentNode.parent
-	#cleanPath.Reverse()
+	cleanPath.reverse()
 	return cleanPath
 
 def shortestPath(graph, target:Node, start:Node):
