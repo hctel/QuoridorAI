@@ -2,7 +2,7 @@ import socket, json, threading, time
 from json.decoder import JSONDecodeError
 
 
-subscribeRequest = "{{\"request\": \"subscribe\",\"port\": {},\"name\": \"Not-A-Virus.exe\",\"matricules\": [\"22054\", \"2217\"]}}"
+subscribeRequest = "{{\"request\": \"subscribe\",\"port\": {},\"name\": \"{}\",\"matricules\": [\"22054\", \"2217\"]}}"
 
 class Network:
     
@@ -46,7 +46,7 @@ class Network:
                 self.__inDef(js, client)
                 client.close()
     
-    def __init__(self, serverIP, serverPort, inPort, inDef):
+    def __init__(self, serverIP, serverPort, inPort, inDef, name="Not-a-Virus.exe"):
         if not isinstance(serverIP, str) and not isinstance(serverPort, int) and not isinstance(inPort, int) and callable(inDef):
             raise TypeError
             return
@@ -55,7 +55,7 @@ class Network:
         self.__socket = socket.socket()
         self.__socket.connect(self.__address)
         self.__inDef = inDef
-        data = subscribeRequest.format(inPort).encode("utf8")
+        data = subscribeRequest.format(inPort, name).encode("utf8")
         sentBytes = 0
         while sentBytes < len(data):
             sent = self.__socket.send(data[sentBytes:])
