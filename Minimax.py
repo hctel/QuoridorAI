@@ -7,6 +7,7 @@ import time
 # 2 is stored for 'O' (player 2)
 
 import random
+from Pathfinder import Pathfinder
 
 lines = [
 	[0, 1, 2],
@@ -18,6 +19,29 @@ lines = [
 	[0, 4, 8],
 	[2, 4, 6]
 ]
+
+test_input = {
+  "players": ["LUR", "HSL"],
+  "current": 0,
+  "blockers": [10, 10],
+   "board": [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
+}
 
 def winner(state):
 	for line in lines:
@@ -56,21 +80,13 @@ def currentPlayer(state):
 		return 1
 	return 2
 
-def lineValue(line, player):
-	counters = {
-		1: 0,
-		2: 0,
-		None: 0
-	}
-
-	for elem in line:
-		counters[elem] += 1
-
-	if counters[player] > counters[player%2+1]:
-		return 1
-	if counters[player] == counters[player%2+1]:
-		return 0
-	return -1
+def stateValue(state, weigths):
+	player = state['current']
+	opponent = abs(player-1) # 1->0 & 0->1
+	
+	playerMoves = len(Pathfinder(state['board'], player))
+	opponentMoves = len(Pathfinder(state['board'], opponent))
+	return weigths[0]*playerMoves + weigths[1]*opponentMoves
 
 def heuristic(state, player):
 	if gameOver(state):
@@ -80,10 +96,8 @@ def heuristic(state, player):
 		if theWinner == player:
 			return 9
 		return -9
-	res = 0
-	for line in lines:
-		res += lineValue([state[i] for i in line], player)
-	return res
+	
+	return stateValue(state, player)
 
 def negamaxWithPruningIterativeDeepening(state, player, timeout=0.2):
 	cache = defaultdict(lambda : 0)
@@ -142,16 +156,11 @@ def show(state):
 	print(state[6:])
 	print()
 
-def run(fun):
-	state = [
-		None, None, None,
-		None, None, None,
-		None, None, None,
-	]
+def run(state, fun):
 	show(state)
 	while not gameOver(state):
 		move = next(state, fun)
 		state = apply(state, move)
 		show(state)
 
-run(negamaxWithPruningIterativeDeepening)
+run(0, negamaxWithPruningIterativeDeepening)
