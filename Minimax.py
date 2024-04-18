@@ -125,10 +125,10 @@ def heuristic(state, weigths):
 	opponentBlockers = state['blockers'][opponent]
 
 	res = weigths[0]*playerMoves + weigths[1]*opponentMoves + weigths[2]*playerBlockers + weigths[3]*opponentBlockers
-	print("res: ", res)
+	#print("res: ", res)
 	return res
 
-def negamaxWithPruningIterativeDeepening(state, weigths, timeout=0.2):
+def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	cache = defaultdict(lambda : 0)
 	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
@@ -173,8 +173,8 @@ def timeit(fun):
 	return wrapper
 
 @timeit
-def next(state, weigths, fun):
-	_, move = fun(state, weigths)
+def next(state, weigths, timeout, fun):
+	_, move = fun(state, weigths, timeout)
 	return move
 
 def show(board):
@@ -190,16 +190,16 @@ def show(board):
 			print(display[y][x], end=' ')
 		print('')
 
-def run(state, weigths, fun):
+def run(state, weigths, timeout, fun):
 	show(state['board'])
 	while not gameOver(state):
-		move = next(state, weigths, fun)
+		move = next(state, weigths, timeout, fun)
 		print(move)
 		state = apply(state, move)
 		show(state['board'])
 
 # Network will call this function during game
-def calculate(state, weigths):
-	return next(state, weigths, negamaxWithPruningIterativeDeepening)
+def calculate(state, weigths, timeout):
+	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(test_input, [-1,0,1,0.5], negamaxWithPruningIterativeDeepening)
+run(test_input, [-1,0,1,0.5], 0.2, negamaxWithPruningIterativeDeepening)
