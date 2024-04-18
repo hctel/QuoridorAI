@@ -98,7 +98,7 @@ def apply(state, move):
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
 
-def gameOver(state):
+def winner(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state['board'], p)
 	if p == 0.0 and y == 16:
@@ -106,6 +106,10 @@ def gameOver(state):
 	if p == 1.0 and y == 0:
 		return 1.0
 	return None
+
+def gameOver(state):
+	if winner(state) is not None:
+		return True
 	
 def currentPlayer(state):
 	return state['current']
@@ -158,8 +162,10 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	depth = 1
 	start = time.time()
 	over = False
+	# replace -9 with a precise value ?
 	while value > -9 and time.time() - start < timeout and not over:
 		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth)
+		#print('value : ', value)
 		depth += 1
 
 	print('depth =', depth)
@@ -203,4 +209,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(test_input, [-1,0,1,0.5], 0.2, negamaxWithPruningIterativeDeepening)
+run(test_input, [-1,1,0,0], 0.2, negamaxWithPruningIterativeDeepening)
