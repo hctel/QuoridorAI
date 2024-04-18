@@ -8,7 +8,7 @@ from copy import deepcopy
 # 2 is stored for 'O' (player 2)
 
 import random
-from Pathfinder import Pathfinder
+from Pathfinder import Pathfinder, getPlayerPos
 
 test_input = {
   "players": ["LUR", "HSL"],
@@ -33,11 +33,41 @@ test_input = {
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
 
+# Return list of accessible cells
+def getNeighbors(board, x, y):
+	neighbors = []
+	# (try > if) more efficient if (except happen < 50%)
+	try:
+		if (board[y-1][x] == 3.0) and (board[y-2][x] == 2.0): # up
+			move = {'type':"pawn", 'position':[[y-2, x]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y+1][x] == 3.0) and (board[y+2][x] == 2.0): # down
+			move = {'type':"pawn", 'position':[[y+2, x]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y][x-1] == 3.0) and (board[y][x-2] == 2.0): # left
+			move = {'type':"pawn", 'position':[[y, x-2]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y][x+1] == 3.0) and (board[y][x+2] == 2.0): # right
+			move = {'type':"pawn", 'position':[[y, x+2]]}
+			neighbors.append(move)
+	except:
+		pass
+	#print(f"neighbors: {neighbors}")
+	return neighbors
+
 def moves(state):
-	res = []
-	for i, elem in enumerate(state):
-		if elem is None:
-			res.append(i)
+	p = currentPlayer(state)
+	x, y = getPlayerPos(state["board"], p)
+	res = getNeighbors(state["board"], x, y)
 	
 	random.shuffle(res)
 	return res
@@ -60,7 +90,12 @@ def apply(state, move):
 		cleanBoard(res["board"], x, y, player)
 		res["board"][y][x] = player
 	elif t == "blocker":
-
+		y0 = move['position'][0][0]
+		x0 = move['position'][0][1]
+		y1 = move['position'][1][0]
+		x1 = move['position'][1][1]
+		res["board"][y0][x0] = 4 # wall cell
+		res["board"][y1][x1] = 4 # wall cell
 	
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
@@ -116,7 +151,7 @@ def negamaxWithPruningIterativeDeepening(state, timeout=0.2):
 	start = time.time()
 	over = False
 	while value > -9 and time.time() - start < timeout and not over:
-		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, player, depth)
+		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, depth)
 		depth += 1
 
 	print('depth =', depth)
@@ -132,7 +167,6 @@ def timeit(fun):
 
 @timeit
 def next(state, fun):
-	player = currentPlayer(state)
 	_, move = fun(state)
 	return move
 
