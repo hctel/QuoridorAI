@@ -189,10 +189,10 @@ def show(board):
 			print(display[y][x], end=' ')
 		print('')
 
-def run(state, fun):
+def run(state, weigths, fun):
 	show(state['board'])
 	while not gameOver(state):
-		move = next(state, fun)
+		move = next(state, weigths, fun)
 		state = apply(state, move)
 		show(state['board'])
 
@@ -200,5 +200,4 @@ def run(state, fun):
 def calculate(state, weigths):
 	return next(state, weigths, negamaxWithPruningIterativeDeepening)
 
-
-run(test_input, negamaxWithPruningIterativeDeepening)
+run(test_input, [1,1,1,1], negamaxWithPruningIterativeDeepening)
