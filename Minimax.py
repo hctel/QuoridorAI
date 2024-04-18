@@ -93,7 +93,7 @@ def negamaxWithPruningIterativeDeepening(state, timeout=0.2):
 	def cachedNegamaxWithPruningLimitedDepth(state, depth, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
 		if over or depth == 0:
-			res = -heuristic(state), None, over
+			res = -heuristic(state, weights), None, over
 
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
@@ -160,4 +160,4 @@ def run(state, fun):
 def calculate(state):
 	return next(state, negamaxWithPruningIterativeDeepening)
 
-run(0, negamaxWithPruningIterativeDeepening)
+#run(0, negamaxWithPruningIterativeDeepening)
