@@ -64,15 +64,16 @@ def getNeighbors(board, x, y):
 
 def getBlockers(board):
 	res = []
-	for y in range(0, len(board)-2, 2):
+	# need a security to prevent Pathfinder fail (no exit)
+	for y in range(1, len(board)-1, 2):
 		for x in range(0, len(board[0])-4, 2):
-			if board[y][x+1]==3 and board[y][x+3]==3:
-				move = {'type':"blocker", 'position':[[y, x+1], [y, x+3]]}
+			if board[y][x]==3 and board[y][x+2]==3:
+				move = {'type':"blocker", 'position':[[y, x], [y, x+2]]} # horizontal
 				res.append(move)
 	for y in range(0, len(board)-4, 2):
-		for x in range(0, len(board[0])-2, 2):
-			if board[y+1][x]==3 and board[y+3][x]==3:
-				move = {'type':"blocker", 'position':[[y+1, x], [y+3, x]]}
+		for x in range(1, len(board[0])-1, 2):
+			if board[y][x]==3 and board[y+2][x]==3:
+				move = {'type':"blocker", 'position':[[y, x], [y+2, x]]} # vertical
 				res.append(move)
 	return res
 
@@ -160,9 +161,7 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
-			#print("before : ", possibilities)
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
-			#print("after : ", possibilities)
 			for move, successor in reversed(possibilities):
 				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, -beta, -alpha)
 				theOver = theOver and over
@@ -202,6 +201,7 @@ def next(state, weigths, timeout, fun):
 	return move
 
 def show(board):
+	print('')
 	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
 	display = [[0]*17 for _ in range(17)]
 
