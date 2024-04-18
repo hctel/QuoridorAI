@@ -2,9 +2,6 @@ from collections import defaultdict
 import time
 from copy import deepcopy
 
-import random
-from Pathfinder import Pathfinder, getPlayerPos
-import sys
 sys.setrecursionlimit(9999)
 
 test_input = {
