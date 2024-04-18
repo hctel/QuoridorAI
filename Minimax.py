@@ -74,6 +74,7 @@ def getBlockers(board):
 			if board[y+1][x]==3 and board[y+3][x]==3:
 				move = {'type':"blocker", 'position':[[y+1, x], [y+3, x]]}
 				res.append(move)
+	return res
 
 def moves(state):
 	p = currentPlayer(state)
@@ -82,7 +83,7 @@ def moves(state):
 	playerMoves = getNeighbors(state["board"], x, y)
 	blockers = getBlockers(state["board"])
 	random.shuffle(blockers)
-	
+
 	res = playerMoves + blockers
 	return res
 
