@@ -62,12 +62,28 @@ def getNeighbors(board, x, y):
 	#print(f"neighbors: {neighbors}")
 	return neighbors
 
+def getBlockers(board):
+	res = []
+	for y in range(0, len(board)-2, 2):
+		for x in range(0, len(board[0])-4, 2):
+			if board[y][x+1]==3 and board[y][x+3]==3:
+				move = {'type':"blocker", 'position':[[y, x+1], [y, x+3]]}
+				res.append(move)
+	for y in range(0, len(board)-4, 2):
+		for x in range(0, len(board[0])-2, 2):
+			if board[y+1][x]==3 and board[y+3][x]==3:
+				move = {'type':"blocker", 'position':[[y+1, x], [y+3, x]]}
+				res.append(move)
+
 def moves(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state["board"], p)
-	res = getNeighbors(state["board"], x, y)
-	# in progress
-	random.shuffle(res)
+
+	playerMoves = getNeighbors(state["board"], x, y)
+	blockers = getBlockers(state["board"])
+	random.shuffle(blockers)
+	
+	res = playerMoves + blockers
 	return res
 
 # need optimization !
