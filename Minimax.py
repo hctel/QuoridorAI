@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import random
 from Pathfinder import Pathfinder, getPlayerPos
+
 import sys
 sys.setrecursionlimit(9999)
 
