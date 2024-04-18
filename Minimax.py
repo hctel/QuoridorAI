@@ -1,15 +1,9 @@
 from collections import defaultdict
 import time
 from copy import deepcopy
-import sys
-# The game state is a list of 9 items
-# None is stored for empty cell
-# 1 is stored for 'X' (player 1)
-# 2 is stored for 'O' (player 2)
 
-import random
-from Pathfinder import Pathfinder, getPlayerPos
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(9999)
+
 test_input = {
   "players": ["LUR", "HSL"],
   "current": 0,
@@ -126,8 +120,10 @@ def heuristic(state, weigths):
 	
 	playerBlockers = state['blockers'][player]
 	opponentBlockers = state['blockers'][opponent]
-	
-	return weigths[0]*playerMoves + weigths[1]*opponentMoves + weigths[2]*playerBlockers + weigths[3]*opponentBlockers
+
+	res = weigths[0]*playerMoves + weigths[1]*opponentMoves + weigths[2]*playerBlockers + weigths[3]*opponentBlockers
+	print("res: ", res)
+	return res
 
 def negamaxWithPruningIterativeDeepening(state, weigths, timeout=0.2):
 	cache = defaultdict(lambda : 0)
@@ -139,9 +135,11 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout=0.2):
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
+			#print("before : ", possibilities)
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
+			#print("after : ", possibilities)
 			for move, successor in reversed(possibilities):
-				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, depth-1, -beta, -alpha)
+				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, -beta, -alpha)
 				theOver = theOver and over
 				if value > theValue:
 					theValue, theMove = value, move
@@ -193,6 +191,7 @@ def run(state, weigths, fun):
 	show(state['board'])
 	while not gameOver(state):
 		move = next(state, weigths, fun)
+		print(move)
 		state = apply(state, move)
 		show(state['board'])
 
@@ -200,4 +199,4 @@ def run(state, weigths, fun):
 def calculate(state, weigths):
 	return next(state, weigths, negamaxWithPruningIterativeDeepening)
 
-run(test_input, [1,1,1,1], negamaxWithPruningIterativeDeepening)
+run(test_input, [-1,0,1,0.5], negamaxWithPruningIterativeDeepening)
