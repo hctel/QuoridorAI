@@ -8,7 +8,7 @@ from copy import deepcopy
 # 2 is stored for 'O' (player 2)
 
 import random
-from Pathfinder import Pathfinder
+from Pathfinder import Pathfinder, getPlayerPos
 
 test_input = {
   "players": ["LUR", "HSL"],
@@ -33,19 +33,49 @@ test_input = {
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
 
+# Return list of accessible cells
+def getNeighbors(board, x, y):
+	neighbors = []
+	# (try > if) more efficient if (except happen < 50%)
+	try:
+		if (board[y-1][x] == 3.0) and (board[y-2][x] == 2.0): # up
+			move = {'type':"pawn", 'position':[[y-2, x]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y+1][x] == 3.0) and (board[y+2][x] == 2.0): # down
+			move = {'type':"pawn", 'position':[[y+2, x]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y][x-1] == 3.0) and (board[y][x-2] == 2.0): # left
+			move = {'type':"pawn", 'position':[[y, x-2]]}
+			neighbors.append(move)
+	except:
+		pass
+	try:
+		if (board[y][x+1] == 3.0) and (board[y][x+2] == 2.0): # right
+			move = {'type':"pawn", 'position':[[y, x+2]]}
+			neighbors.append(move)
+	except:
+		pass
+	#print(f"neighbors: {neighbors}")
+	return neighbors
+
 def moves(state):
-	res = []
-	for i, elem in enumerate(state):
-		if elem is None:
-			res.append(i)
-	
+	p = currentPlayer(state)
+	x, y = getPlayerPos(state["board"], p)
+	res = getNeighbors(state["board"], x, y)
+	# in progress
 	random.shuffle(res)
 	return res
 
 # need optimization !
 def cleanBoard(board, x, y, player):
-	for yc in range(board):
-		for xc in range(board[0]):
+	for yc in range(len(board)):
+		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
 				board[yc][xc] = 2 # empty cell
 
@@ -60,13 +90,24 @@ def apply(state, move):
 		cleanBoard(res["board"], x, y, player)
 		res["board"][y][x] = player
 	elif t == "blocker":
-
+		y0 = move['position'][0][0]
+		x0 = move['position'][0][1]
+		y1 = move['position'][1][0]
+		x1 = move['position'][1][1]
+		res["board"][y0][x0] = 4 # wall cell
+		res["board"][y1][x1] = 4 # wall cell
 	
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
 
 def gameOver(state):
-	pass
+	p = currentPlayer(state)
+	x, y = getPlayerPos(state['board'], p)
+	if p == 0.0 and y == 16:
+		return 0.0
+	if p == 1.0 and y == 0:
+		return 1.0
+	return None
 	
 def currentPlayer(state):
 	return state['current']
@@ -93,7 +134,7 @@ def negamaxWithPruningIterativeDeepening(state, timeout=0.2):
 	def cachedNegamaxWithPruningLimitedDepth(state, depth, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
 		if over or depth == 0:
-			res = -heuristic(state, weights), None, over
+			res = -heuristic(state, weigths), None, over
 
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
@@ -116,7 +157,7 @@ def negamaxWithPruningIterativeDeepening(state, timeout=0.2):
 	start = time.time()
 	over = False
 	while value > -9 and time.time() - start < timeout and not over:
-		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, player, depth)
+		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, depth)
 		depth += 1
 
 	print('depth =', depth)
@@ -132,7 +173,6 @@ def timeit(fun):
 
 @timeit
 def next(state, fun):
-	player = currentPlayer(state)
 	_, move = fun(state)
 	return move
 
@@ -144,20 +184,21 @@ def show(board):
 		for x in range(len(board[0])):
 			display[y][x] = table[board[y][x]]
 
-	for y in range(board):
-		for x in range(board[0]):
+	for y in range(len(board)):
+		for x in range(len(board[0])):
 			print(display[y][x], end=' ')
 		print('')
 
 def run(state, fun):
-	show(state)
+	show(state['board'])
 	while not gameOver(state):
 		move = next(state, fun)
 		state = apply(state, move)
-		show(state)
+		show(state['board'])
 
 # Network will call this function during game
 def calculate(state):
 	return next(state, negamaxWithPruningIterativeDeepening)
 
-#run(0, negamaxWithPruningIterativeDeepening)
+
+run(test_input, negamaxWithPruningIterativeDeepening)
