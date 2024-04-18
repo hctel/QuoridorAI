@@ -16,7 +16,7 @@ def handleRcv(js, client):
 def train(port, w):
     global weights
     weights = w
-    network = Network("localhost", 3000, port, handleRcv, f"{w[0]};{w[1]};{w[2]};{w[3]};{w[4]}")
+    network = Network("10.0.0.153", 3000, port, handleRcv, f"{w[0]};{w[1]};{w[2]};{w[3]};{w[4]}", f"[\"{random.randint(0,29000)}\"]")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
@@ -28,7 +28,7 @@ def train(port, w):
 if __name__ == "__main__":
     global weights
     weights = [-1,0,1,0.5]
-    network = Network("172.17.10.59", 3000, 22167, handleRcv, "Je m'appelle teuse")
+    network = Network("10.0.0.153", 3000, 3310, handleRcv, "Je m'appeelle teus", "[\"220541\", \"221671\"]")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
