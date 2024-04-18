@@ -1,6 +1,7 @@
 from collections import defaultdict
-import time
+import time,sys,random
 from copy import deepcopy
+from Pathfinder import  *
 
 sys.setrecursionlimit(9999)
 
@@ -199,4 +200,4 @@ def run(state, weigths, fun):
 def calculate(state, weigths):
 	return next(state, weigths, negamaxWithPruningIterativeDeepening)
 
-run(test_input, [-1,0,1,0.5], negamaxWithPruningIterativeDeepening)
+#run(test_input, [-1,0,1,0.5], negamaxWithPruningIterativeDeepening)
