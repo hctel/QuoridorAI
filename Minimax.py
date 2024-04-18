@@ -68,14 +68,14 @@ def moves(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state["board"], p)
 	res = getNeighbors(state["board"], x, y)
-	
+	# in progress
 	random.shuffle(res)
 	return res
 
 # need optimization !
 def cleanBoard(board, x, y, player):
-	for yc in range(board):
-		for xc in range(board[0]):
+	for yc in range(len(board)):
+		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
 				board[yc][xc] = 2 # empty cell
 
@@ -101,7 +101,13 @@ def apply(state, move):
 	return res
 
 def gameOver(state):
-	pass
+	p = currentPlayer(state)
+	x, y = getPlayerPos(state['board'], p)
+	if p == 0.0 and y == 16:
+		return 0.0
+	if p == 1.0 and y == 0:
+		return 1.0
+	return None
 	
 def currentPlayer(state):
 	return state['current']
@@ -128,7 +134,7 @@ def negamaxWithPruningIterativeDeepening(state, timeout=0.2):
 	def cachedNegamaxWithPruningLimitedDepth(state, depth, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
 		if over or depth == 0:
-			res = -heuristic(state), None, over
+			res = -heuristic(state, weigths), None, over
 
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
@@ -178,20 +184,20 @@ def show(board):
 		for x in range(len(board[0])):
 			display[y][x] = table[board[y][x]]
 
-	for y in range(board):
-		for x in range(board[0]):
+	for y in range(len(board)):
+		for x in range(len(board[0])):
 			print(display[y][x], end=' ')
 		print('')
 
 def run(state, fun):
-	show(state)
+	show(state['board'])
 	while not gameOver(state):
 		move = next(state, fun)
 		state = apply(state, move)
-		show(state)
+		show(state['board'])
 
 # Network will call this function during game
 def calculate(state):
 	return next(state, negamaxWithPruningIterativeDeepening)
 
-run(0, negamaxWithPruningIterativeDeepening)
+run(test_input, negamaxWithPruningIterativeDeepening)
