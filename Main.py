@@ -13,8 +13,9 @@ def handleRcv(js, client):
         }
         network.send(client, json.dumps(response))
         
-def train(port, w1, w2, w3, w4, w5):
-    network = Network("localhost", 3000, port, handleRcv, f"{w1};{w2};{w3};{w4};{w5}")
+def train(port, w):
+    setWeights(w)
+    network = Network("localhost", 3000, port, handleRcv, f"{w[0]};{w[1]};{w[2]};{w[3]};{w[4]}")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
