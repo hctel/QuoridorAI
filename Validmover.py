@@ -30,9 +30,9 @@ def check_valid_move(state, move):
             move["position"][index] = tuple(position)
             if not check_inboard_position(position):
                 return False
-    except KeyError as err:
+    except KeyError:
         return False
-    except AssertionError as err:
+    except AssertionError:
         return False
 
     # check for valid position for a pawn or a blocker
