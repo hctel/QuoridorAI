@@ -200,4 +200,5 @@ def run(state, fun):
 def calculate(state):
 	return next(state, negamaxWithPruningIterativeDeepening)
 
+
 run(test_input, negamaxWithPruningIterativeDeepening)
