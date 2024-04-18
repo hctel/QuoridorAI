@@ -1,7 +1,7 @@
 from collections import defaultdict
 import time
 from copy import deepcopy
-
+import sys
 # The game state is a list of 9 items
 # None is stored for empty cell
 # 1 is stored for 'X' (player 1)
@@ -9,7 +9,7 @@ from copy import deepcopy
 
 import random
 from Pathfinder import Pathfinder, getPlayerPos
-
+sys.setrecursionlimit(10000)
 test_input = {
   "players": ["LUR", "HSL"],
   "current": 0,

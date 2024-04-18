@@ -83,7 +83,7 @@ def shortestPath(graph, start:Node, target:Node):
 		u = openList.pop()
 		closedList.add(u)
 		if u.y == target.y: # Quoridor only need 'y' check
-			print("targeted !")
+			#print("targeted !")
 			path = retracePath(start, u)
 			return path
 		for v in getNeighbors(u, graph):
