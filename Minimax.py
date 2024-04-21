@@ -147,7 +147,8 @@ def heuristic(state, weigths):
 		playerMoves = len(Pathfinder(state['board'], player)) # slow
 		opponentMoves = len(Pathfinder(state['board'], opponent)) # slow
 	except:
-		show(state["board"])
+		#show(state["board"])
+		return 0
 
 	if playerMoves == 0: # win
 		return 999 
@@ -163,7 +164,7 @@ def heuristic(state, weigths):
 
 def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	cache = defaultdict(lambda : 0)
-	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, alpha=float('-inf'), beta=float('inf')):
+	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
 		if over or depth == 0:
 			res = -heuristic(state, weigths), None, over
@@ -173,12 +174,14 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
 			for move, successor in reversed(possibilities):
-				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, -beta, -alpha)
+				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
 				theOver = theOver and over
 				if value > theValue:
 					theValue, theMove = value, move
 				alpha = max(alpha, theValue)
 				if alpha >= beta:
+					break
+				if time.time() - start > timeout:
 					break
 			res = -theValue, theMove, theOver
 		cache[tuple(state)] = res[0]
@@ -190,7 +193,7 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	over = False
 	# replace -9 with a precise value ?
 	while value > -9 and time.time() - start < timeout and not over:
-		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth)
+		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout)
 		#print('value : ', value)
 		depth += 1
 
@@ -236,4 +239,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(test_input, [-1,1,0,0], 0.2, negamaxWithPruningIterativeDeepening)
+run(test_input, [-1,1,10,-10], 3.2, negamaxWithPruningIterativeDeepening)
