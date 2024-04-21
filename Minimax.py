@@ -82,6 +82,10 @@ def moves(state):
 	x, y = getPlayerPos(state["board"], p)
 
 	playerMoves = getNeighbors(state["board"], x, y)
+
+	if state["blockers"][p] == 0: # no remaining blockers/walls for this player
+		return playerMoves
+	
 	blockers = getBlockers(state["board"])
 	random.shuffle(blockers)
 
@@ -106,6 +110,7 @@ def apply(state, move):
 		cleanBoard(res["board"], x, y, player)
 		res["board"][y][x] = player
 	elif t == "blocker":
+		res["blockers"][player] -= 1
 		y0 = move['position'][0][0]
 		x0 = move['position'][0][1]
 		y1 = move['position'][1][0]
