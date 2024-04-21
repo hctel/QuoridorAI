@@ -8,6 +8,14 @@ from Pathfinder import Pathfinder, getPlayerPos
 import sys
 sys.setrecursionlimit(9999)
 
+# Board tile values
+PAWN1 = 0
+PAWN2 = 1
+EMPTY_PAWN = 2
+EMPTY_BLOCKER = 3
+BLOCKER = 4
+IMP = 5  # for places where no blockers and pawns can be
+
 test_input = {
   "players": ["LUR", "HSL"],
   "current": 0,
@@ -147,7 +155,8 @@ def heuristic(state, weigths):
 		playerMoves = len(Pathfinder(state['board'], player)) # slow
 		opponentMoves = len(Pathfinder(state['board'], opponent)) # slow
 	except:
-		#show(state["board"])
+		show(state["board"])
+		print("Illegal move !")
 		return 0
 
 	if playerMoves == 0: # win
