@@ -136,13 +136,18 @@ def heuristic(state, weigths):
 	player = state['current']
 	opponent = abs(player-1) # 1->0 & 0->1
 	
-	playerMoves = len(Pathfinder(state['board'], player)) # slow
-	opponentMoves = len(Pathfinder(state['board'], opponent)) # slow
+	playerMoves = -1
+	opponentMoves = 0
+	try:
+		playerMoves = len(Pathfinder(state['board'], player)) # slow
+		opponentMoves = len(Pathfinder(state['board'], opponent)) # slow
+	except:
+		show(state["board"])
 
-	if playerMoves == 0:
-		return 999
-	if opponentMoves == 0:
-		return -999
+	if playerMoves == 0: # win
+		return 999 
+	if opponentMoves == 0: # lose
+		return -999 
 	
 	playerBlockers = state['blockers'][player]
 	opponentBlockers = state['blockers'][opponent]
