@@ -1,6 +1,14 @@
 from functools import cmp_to_key
 from math import sqrt
 
+# Board tile values
+PAWN1 = 0
+PAWN2 = 1
+EMPTY_PAWN = 2
+EMPTY_BLOCKER = 3
+BLOCKER = 4
+IMP = 5  # for places where no blockers and pawns can be
+
 # Return player position on the game board
 def getPlayerPos(board, me):
 	for y in range(len(board)):
@@ -41,22 +49,22 @@ def getNeighbors(n:Node, graph):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
 	try:
-		if (graph[n.y-1][n.x] == 3.0) and (graph[n.y-2][n.x] == 2.0): # up
+		if (graph[n.y-1][n.x] == EMPTY_BLOCKER) and (graph[n.y-2][n.x] == EMPTY_PAWN): # up
 			neighbors.append(Node(n.x, n.y-2))
 	except:
 		pass
 	try:
-		if (graph[n.y+1][n.x] == 3.0) and (graph[n.y+2][n.x] == 2.0): # down
+		if (graph[n.y+1][n.x] == EMPTY_BLOCKER) and (graph[n.y+2][n.x] == EMPTY_PAWN): # down
 			neighbors.append(Node(n.x, n.y+2))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x-1] == 3.0) and (graph[n.y][n.x-2] == 2.0): # left
+		if (graph[n.y][n.x-1] == EMPTY_BLOCKER) and (graph[n.y][n.x-2] == EMPTY_PAWN): # left
 			neighbors.append(Node(n.x-2, n.y))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x+1] == 3.0) and (graph[n.y][n.x+2] == 2.0): # right
+		if (graph[n.y][n.x+1] == EMPTY_BLOCKER) and (graph[n.y][n.x+2] == EMPTY_PAWN): # right
 			neighbors.append(Node(n.x+2, n.y))
 	except:
 		pass
@@ -104,15 +112,16 @@ def shortestPath(graph, start:Node, target:Node):
 def Pathfinder(board, me):
 	x, y = getPlayerPos(board, me)
 	start = Node(x, y, 0, 0)
-	if me == 0.0: # color 1
+	if me == PAWN1: # color 1
 		end = Node(8, 16) # target DOWN
-	elif me == 1.0: # color 2
+	elif me == PAWN2: # color 2
 		end = Node(8, 0) # target UP
 	return shortestPath(board, start, end)
 
 # Debug function to display path on game board
 def displayPath(board, path):
-	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
+	#table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
+	table = {PAWN1:'A', PAWN2:'B', EMPTY_PAWN:'.', EMPTY_BLOCKER:'-', 4.0:'#', IMP:' '}
 	display = [[0]*17 for _ in range(17)]
 
 	for y in range(len(board)):
