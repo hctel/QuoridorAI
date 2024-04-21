@@ -44,25 +44,25 @@ def getNeighbors(board, x, y):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
 	try:
-		if (board[y-1][x] == 3.0) and (board[y-2][x] == 2.0): # up
+		if (board[y-1][x] == EMPTY_BLOCKER) and (board[y-2][x] == EMPTY_PAWN): # up
 			move = {'type':"pawn", 'position':[[y-2, x]]}
 			neighbors.append(move)
 	except:
 		pass
 	try:
-		if (board[y+1][x] == 3.0) and (board[y+2][x] == 2.0): # down
+		if (board[y+1][x] == EMPTY_BLOCKER) and (board[y+2][x] == EMPTY_PAWN): # down
 			move = {'type':"pawn", 'position':[[y+2, x]]}
 			neighbors.append(move)
 	except:
 		pass
 	try:
-		if (board[y][x-1] == 3.0) and (board[y][x-2] == 2.0): # left
+		if (board[y][x-1] == EMPTY_BLOCKER) and (board[y][x-2] == EMPTY_PAWN): # left
 			move = {'type':"pawn", 'position':[[y, x-2]]}
 			neighbors.append(move)
 	except:
 		pass
 	try:
-		if (board[y][x+1] == 3.0) and (board[y][x+2] == 2.0): # right
+		if (board[y][x+1] == EMPTY_BLOCKER) and (board[y][x+2] == EMPTY_PAWN): # right
 			move = {'type':"pawn", 'position':[[y, x+2]]}
 			neighbors.append(move)
 	except:
@@ -105,7 +105,7 @@ def cleanBoard(board, x, y, player):
 	for yc in range(len(board)):
 		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
-				board[yc][xc] = 2 # empty cell
+				board[yc][xc] = EMPTY_PAWN
 
 def apply(state, move):
 	player = currentPlayer(state)
@@ -123,8 +123,8 @@ def apply(state, move):
 		x0 = move['position'][0][1]
 		y1 = move['position'][1][0]
 		x1 = move['position'][1][1]
-		res["board"][y0][x0] = 4 # wall cell
-		res["board"][y1][x1] = 4 # wall cell
+		res["board"][y0][x0] = BLOCKER
+		res["board"][y1][x1] = BLOCKER
 	
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
@@ -132,10 +132,10 @@ def apply(state, move):
 def winner(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state['board'], p)
-	if p == 0.0 and y == 16:
-		return 0.0
-	if p == 1.0 and y == 0:
-		return 1.0
+	if p == PAWN1 and y == 16:
+		return PAWN1
+	if p == PAWN2 and y == 0:
+		return PAWN2
 	return None
 
 def gameOver(state):
