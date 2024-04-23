@@ -175,13 +175,19 @@ def heuristic(state, weigths):
 	
 	playerMoves = -1
 	opponentMoves = 0
-	try:
-		playerMoves = len(Pathfinder(state['board'], player)) # slow
-		opponentMoves = len(Pathfinder(state['board'], opponent)) # slow
-	except:
-		show(state["board"])
-		print("Illegal move !")
-		return 0
+	playerPath = "empty"
+	opponentPath = "empty"
+	
+	playerPath = Pathfinder(state['board'], player) # slow
+	opponentPath = Pathfinder(state['board'], opponent) # slow
+	if (playerPath == None) or (opponentPath == None):
+		#print("Illegal move !")
+		#print('player : ', playerPath, playerMoves)
+		#print('opponent : ', opponentPath, opponentMoves)
+		#show(state["board"])
+		return None # illegal move
+	playerMoves = len(playerPath)
+	opponentMoves = len(opponentPath)
 
 	if playerMoves == 0: # win
 		return 999 
@@ -200,14 +206,20 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout, alpha=float('-inf'), beta=float('inf')):
 		over = gameOver(state)
 		if over or depth == 0:
-			res = -heuristic(state, weigths), None, over
+			h = heuristic(state, weigths)
+			if h == None: # illegal move
+				return None, None, over
+			res = -h, None, over
 
 		else:
 			theValue, theMove, theOver = float('-inf'), None, True
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
 			for move, successor in reversed(possibilities):
+			#for move, successor in possibilities:
 				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
+				if value == None: # illegal move -> skip this move
+					continue
 				theOver = theOver and over
 				if value > theValue:
 					theValue, theMove = value, move
