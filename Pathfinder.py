@@ -105,7 +105,7 @@ def shortestPath(graph, start:Node, target:Node):
 					v.parent = u
 					if v not in openList:
 						openList.append(v)
-	print("Error no path found")
+	#print("Error no path found")
 	return None
 
 # Global function usable in game
