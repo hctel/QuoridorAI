@@ -131,6 +131,18 @@ def cleanBoard(board, x, y, player):
 			if board[yc][xc] == player:
 				board[yc][xc] = EMPTY_PAWN
 
+def applyBoard(board, move):
+	res = deepcopy(board)
+
+	y0 = move['position'][0][0]
+	x0 = move['position'][0][1]
+	y1 = move['position'][1][0]
+	x1 = move['position'][1][1]
+	res[y0][x0] = BLOCKER
+	res[y1][x1] = BLOCKER
+
+	return res
+
 def apply(state, move):
 	player = currentPlayer(state)
 	res = deepcopy(state)
