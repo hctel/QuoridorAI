@@ -154,11 +154,11 @@ def apply(state, move):
 	return res
 
 def winner(state):
-	p = currentPlayer(state)
-	x, y = getPlayerPos(state['board'], p)
-	if p == PAWN1 and y == 16:
+	_, p1y = getPlayerPos(state['board'], PAWN1)
+	_, p2y = getPlayerPos(state['board'], PAWN2)
+	if p1y == 16:
 		return PAWN1
-	if p == PAWN2 and y == 0:
+	if p2y == 0:
 		return PAWN2
 	return None
 
