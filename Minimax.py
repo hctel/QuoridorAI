@@ -169,7 +169,7 @@ def gameOver(state):
 def currentPlayer(state):
 	return state['current']
 
-def heuristic(state, weigths):
+def heuristic(state, weigths, debug=False):
 	player = state['current']
 	opponent = abs(player-1) # 1->0 & 0->1
 	
@@ -188,6 +188,10 @@ def heuristic(state, weigths):
 		return None # illegal move
 	playerMoves = len(playerPath)
 	opponentMoves = len(opponentPath)
+
+	if debug:
+		print("playerPath:", playerPath, ", playerMoves:", playerMoves)
+		print("opponentPath:", opponentPath, ", opponentMoves:", opponentMoves)
 
 	if playerMoves == 0: # win
 		return 999 
