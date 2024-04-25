@@ -238,8 +238,8 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 			theValue, theMove, theOver = float('-inf'), None, True
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
-			for move, successor in reversed(possibilities):
-			#for move, successor in possibilities:
+			
+			for move, successor in possibilities:
 				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
 				if value == None: # illegal move -> skip this move
 					continue
