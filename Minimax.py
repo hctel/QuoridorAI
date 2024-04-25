@@ -63,31 +63,43 @@ test_input = {
 }
 
 # Return list of accessible cells
-def getNeighbors(board, x, y):
+def getNeighbors(board, x, y, stop_recursive=False):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
 	try:
-		if (board[y-1][x] == EMPTY_BLOCKER) and (board[y-2][x] == EMPTY_PAWN): # up
+		if board[y-1][x] == EMPTY_BLOCKER: # up
 			move = {'type':"pawn", 'position':[[y-2, x]]}
-			neighbors.append(move)
+			if board[y-2][x] == EMPTY_PAWN:
+				neighbors.append(move)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(board, x, y-2, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (board[y+1][x] == EMPTY_BLOCKER) and (board[y+2][x] == EMPTY_PAWN): # down
+		if board[y+1][x] == EMPTY_BLOCKER: # down
 			move = {'type':"pawn", 'position':[[y+2, x]]}
-			neighbors.append(move)
+			if board[y+2][x] == EMPTY_PAWN:
+				neighbors.append(move)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(board, x, y+2, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (board[y][x-1] == EMPTY_BLOCKER) and (board[y][x-2] == EMPTY_PAWN): # left
+		if board[y][x-1] == EMPTY_BLOCKER: # left
 			move = {'type':"pawn", 'position':[[y, x-2]]}
-			neighbors.append(move)
+			if board[y][x-2] == EMPTY_PAWN:
+				neighbors.append(move)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(board, x-2, y, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (board[y][x+1] == EMPTY_BLOCKER) and (board[y][x+2] == EMPTY_PAWN): # right
+		if board[y][x+1] == EMPTY_BLOCKER: # right
 			move = {'type':"pawn", 'position':[[y, x+2]]}
-			neighbors.append(move)
+			if board[y][x+2] == EMPTY_PAWN:
+				neighbors.append(move)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(board, x+2, y, stop_recursive=True))
 	except:
 		pass
 	#print(f"neighbors: {neighbors}")
@@ -307,4 +319,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(empty_input, [-10,10,5,-5], 0.03, negamaxWithPruningIterativeDeepening)
+run(empty_input, [-10,10,5,-5], 0.1, negamaxWithPruningIterativeDeepening)

@@ -45,27 +45,43 @@ def compByHeuristic(n1:Node, n2:Node):
 		return -1
 
 # Return list of accessible Nodes
-def getNeighbors(n:Node, graph):
+def getNeighbors(n:Node, graph, stop_recursive=False):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
 	try:
-		if (graph[n.y-1][n.x] == EMPTY_BLOCKER) and (graph[n.y-2][n.x] == EMPTY_PAWN): # up
-			neighbors.append(Node(n.x, n.y-2))
+		if graph[n.y-1][n.x] == EMPTY_BLOCKER: # up
+			n2 = Node(n.x, n.y-2)
+			if graph[n.y-2][n.x] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y+1][n.x] == EMPTY_BLOCKER) and (graph[n.y+2][n.x] == EMPTY_PAWN): # down
-			neighbors.append(Node(n.x, n.y+2))
+		if graph[n.y+1][n.x] == EMPTY_BLOCKER: # down
+			n2 = Node(n.x, n.y+2)
+			if graph[n.y+2][n.x] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x-1] == EMPTY_BLOCKER) and (graph[n.y][n.x-2] == EMPTY_PAWN): # left
-			neighbors.append(Node(n.x-2, n.y))
+		if graph[n.y][n.x-1] == EMPTY_BLOCKER: # left
+			n2 = Node(n.x-2, n.y)
+			if graph[n.y][n.x-2] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x+1] == EMPTY_BLOCKER) and (graph[n.y][n.x+2] == EMPTY_PAWN): # right
-			neighbors.append(Node(n.x+2, n.y))
+		if graph[n.y][n.x+1] == EMPTY_BLOCKER: # right
+			n2 = Node(n.x+2, n.y)
+			if graph[n.y][n.x+2] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	#print(f"neighbors: {neighbors}")
