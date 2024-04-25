@@ -249,8 +249,8 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 				alpha = max(alpha, theValue)
 				if alpha >= beta:
 					break
-				if time.time() - start > timeout:
-					break
+				#if time.time() - start > timeout:
+					#break
 			res = -theValue, theMove, theOver
 		cache[tuple(state)] = res[0]
 		return res
@@ -307,4 +307,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(empty_input, [-1,1,10,-10], 3.2, negamaxWithPruningIterativeDeepening)
+run(empty_input, [-10,10,5,-5], 0.03, negamaxWithPruningIterativeDeepening)
