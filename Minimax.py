@@ -236,8 +236,8 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	depth = 1
 	start = time.time()
 	over = False
-	# replace -9 with a precise value ?
-	while value > -9 and time.time() - start < timeout and not over:
+
+	while value > -999 and time.time() - start < timeout and not over:
 		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout)
 		#print('value : ', value)
 		depth += 1
