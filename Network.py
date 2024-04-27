@@ -2,7 +2,7 @@ import socket, json, threading, time
 from json.decoder import JSONDecodeError
 
 #Initial subscribe request. As only the port changes, we chose to hard-code that request string.
-subscribeRequest = "{{\"request\": \"subscribe\",\"port\": {},\"name\": \"{}\",\"matricules\": [\"22054\", \"22167\"]}}"
+subscribeRequest = "{{\"request\": \"subscribe\",\"port\": {},\"name\": \"{}\",\"matricules\": {}}}"
 
 class Network:
     
@@ -53,7 +53,7 @@ class Network:
     
 
     #Creates the Network object. serverIP is a string of the server IP, serverPort is an int of the server listening port, inPort is an int of our program's port and inDef is a function to be called when 
-    def __init__(self, serverIP, serverPort, inPort, inDef, name):
+    def __init__(self, serverIP, serverPort, inPort, inDef, name, matricules):
 
         if not isinstance(serverIP, str) and not isinstance(serverPort, int) and not isinstance(inPort, int) and callable(inDef):
             raise TypeError
@@ -64,7 +64,7 @@ class Network:
         self.__socket = socket.socket()
         self.__socket.connect(self.__address)
         self.__inDef = inDef
-        data = subscribeRequest.format(inPort, name).encode("utf8")
+        data = subscribeRequest.format(inPort, name, matricules).encode("utf8")
         sentBytes = 0
         while sentBytes < len(data):
             sent = self.__socket.send(data[sentBytes:])
