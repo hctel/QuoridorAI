@@ -216,8 +216,6 @@ def heuristic(state, weigths, debug=False):
 	playerManhattan = Manhattan(state["board"], player)
 	opponentManhattan = Manhattan(state["board"], opponent)
 
-	print(playerManhattan, opponentManhattan)
-
 	if playerManhattan == 0: # win
 		return 9999
 	if opponentManhattan == 0: # lose
