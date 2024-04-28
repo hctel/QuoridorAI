@@ -1,6 +1,7 @@
 from collections import defaultdict
-import time
+import time,sys,random
 from copy import deepcopy
+from Pathfinder import  *
 
 import random
 from Pathfinder import Pathfinder, getPlayerPos
@@ -319,4 +320,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-run(empty_input, [-10,10,5,-5], 0.1, negamaxWithPruningIterativeDeepening)
+#run(empty_input, [-10,10,5,-5], 0.1, negamaxWithPruningIterativeDeepening)
