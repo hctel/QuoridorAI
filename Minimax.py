@@ -201,33 +201,43 @@ def gameOver(state):
 def currentPlayer(state):
 	return state['current']
 
+def Manhattan(board, pawn):
+	x, y = getPlayerPos(board, pawn)
+	if pawn == PAWN1:
+		return 16-y
+	else:
+		return y
+	
+
 def heuristic(state, weigths, debug=False):
 	player = state['current']
 	opponent = abs(player-1) # 1->0 & 0->1
-	
-	playerMoves = -1
-	opponentMoves = 0
-	playerPath = "empty"
-	opponentPath = "empty"
+
+	playerManhattan = Manhattan(state["board"], player)
+	opponentManhattan = Manhattan(state["board"], opponent)
+
+	print(playerManhattan, opponentManhattan)
+
+	if playerManhattan == 0: # win
+		return 9999
+	if opponentManhattan == 0: # lose
+		return -9999
 	
 	playerPath = Pathfinder(state['board'], player) # slow
 	opponentPath = Pathfinder(state['board'], opponent) # slow
-	playerMoves = len(playerPath)
-	opponentMoves = len(opponentPath)
+	playerDijkstra = len(playerPath)
+	opponentDijkstra = len(opponentPath)
 
 	if debug:
-		print("playerPath:", playerPath, ", playerMoves:", playerMoves)
-		print("opponentPath:", opponentPath, ", opponentMoves:", opponentMoves)
-
-	if playerMoves == 0: # win
-		return 999 
-	if opponentMoves == 0: # lose
-		return -999 
+		print("playerPath:", playerPath, ", playerDijkstra:", playerDijkstra)
+		print("opponentPath:", opponentPath, ", opponentDijkstra:", opponentDijkstra)
 	
 	playerBlockers = state['blockers'][player]
 	opponentBlockers = state['blockers'][opponent]
 
-	res = weigths[0]*playerMoves + weigths[1]*opponentMoves + weigths[2]*playerBlockers + weigths[3]*opponentBlockers
+	res = (weigths[0]*playerDijkstra + weigths[1]*opponentDijkstra + 
+		   weigths[2]*playerManhattan + weigths[3]*opponentManhattan +
+		   weigths[4]*playerBlockers + weigths[5]*opponentBlockers)
 	#print("res: ", res)
 	return res
 
@@ -263,7 +273,7 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 	start = time.time()
 	over = False
 
-	while value > -999 and time.time() - start < timeout and not over:
+	while value > -9999 and time.time() - start < timeout and not over:
 		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout)
 		#print('value : ', value)
 		depth += 1
@@ -310,4 +320,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-#run(empty_input, [-10,1,1,-1], 0.03, negamaxWithPruningIterativeDeepening)
+run(empty_input, [-10,1,0,0,0,0], 0.03, negamaxWithPruningIterativeDeepening)
