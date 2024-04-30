@@ -6,13 +6,14 @@ start_port = 3001
 
 center_weights = [0,0,0,0]
 delta = 0.5
+at = True
 
 def run(port, w):
     Main.train(port, w)   
     
 
 if __name__ == "__main__":
-    if True :
+    if at :
         processes = []
         ports = 3001
         for i in range(3001, 3001+number_of_cores):
