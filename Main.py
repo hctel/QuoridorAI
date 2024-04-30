@@ -6,6 +6,7 @@ fun_messages = ["Helo your compuder has virus", "Mais, vous savez, moi je ne cro
 
 
 def handleRcv(js, client):
+    weights = [-30,5,0,-0]
     if js["request"] == "play":
         print(js["errors"])
         response = {
