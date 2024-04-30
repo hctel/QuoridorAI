@@ -20,7 +20,7 @@ def train(port, w):
     global weights
     weights = w
     global network
-    network = Network("10.0.0.153", 3000, port, handleRcv, f"{w[0]};{w[1]};{w[2]};{w[3]};{w[4]}", f"[\"{random.randint(0,29000)}\"]")
+    network = Network("10.0.0.153", 3000, port, handleRcv, f"{w[0]};{w[1]};{w[2]};{w[3]};{w[4]};{w[5]}", f"[\"{random.randint(0,29000)}\"]")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
