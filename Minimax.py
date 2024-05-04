@@ -312,15 +312,23 @@ def show(board):
 		print('')
 
 def run(state, weigths, timeout, fun):
+	import hashlib
+
 	show(state['board'])
+	m = hashlib.sha256()
+	m.update(str(state["board"]).encode("utf-8"))
+	print(m.hexdigest())
 	while not gameOver(state):
 		move = next(state, weigths, timeout, fun)
 		print(move)
 		state = apply(state, move)
 		show(state['board'])
+		m = hashlib.sha256()
+		m.update(str(state["board"]).encode("utf-8"))
+		print(m.hexdigest())
 
 # Network will call this function during game
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-#run(empty_input, [-10,14,11,0,0,-5], 0.03, negamaxWithPruningIterativeDeepening)
+#run(test_input, [-10,14,11,0,0,-5], 0.0000003, negamaxWithPruningIterativeDeepening)
