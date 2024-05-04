@@ -317,5 +317,3 @@ def run(state, weigths, timeout, fun):
 # Network will call this function during game
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
-
-run(empty_input, [-10,1,0,0,0,0], 0.03, negamaxWithPruningIterativeDeepening)
