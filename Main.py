@@ -6,12 +6,11 @@ fun_messages = ["Helo your compuder has virus", "Mais, vous savez, moi je ne cro
 
 
 def handleRcv(js, client):
-    weights = [-30,5,0,-0]
     if js["request"] == "play":
         print(js["errors"])
         response = {
             "response": "move",
-            "move": calculate(js["state"],weights, 0.02),
+            "move": calculate(js["state"],weights, 1),
             "message": fun_messages[random.randint(0,len(fun_messages)-1)]
         }
         network.send(client, json.dumps(response))
@@ -31,9 +30,9 @@ def train(port, w):
 
 if __name__ == "__main__":
     global weights
-    weights = [-1,0,1,0.5]
+    weights = [-10,14,10,0,0,-5]
     global network
-    network = Network("10.0.0.153", 3000, 3310, handleRcv, "Je m'appeelle teus", "[\"220541\", \"221671\"]")
+    network = Network("10.0.0.153", 3000, 3310, handleRcv, "Je m'appelle teuse", "[\"22054\", \"22167\"]")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
