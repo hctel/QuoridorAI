@@ -15,11 +15,17 @@ def handleRcv(js, client):
         m = hashlib.sha256()
         m.update(str(js["state"]["board"]).encode("utf-8"))
         board_index = m.hexdigest()
-        
+
         if board_index in lib.keys():
             move = lib[board_index][int(js["state"]["current"])]
         else:
-            move = calculate(js["state"], weights, 0.03)
+            calculated = False
+            while not calculated:
+                try:
+                    move = calculate(js["state"], weights, 0.03)
+                    calculated = True
+                except:
+                    pass
 
         response = {
             "response": "move",
