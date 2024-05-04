@@ -1,6 +1,14 @@
 from functools import cmp_to_key
 from math import sqrt
 
+# Board tile values
+PAWN1 = 0
+PAWN2 = 1
+EMPTY_PAWN = 2
+EMPTY_BLOCKER = 3
+BLOCKER = 4
+IMP = 5  # for places where no blockers and pawns can be
+
 # Return player position on the game board
 def getPlayerPos(board, me):
 	for y in range(len(board)):
@@ -37,27 +45,43 @@ def compByHeuristic(n1:Node, n2:Node):
 		return -1
 
 # Return list of accessible Nodes
-def getNeighbors(n:Node, graph):
+def getNeighbors(n:Node, graph, stop_recursive=False):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
 	try:
-		if (graph[n.y-1][n.x] == 3.0) and (graph[n.y-2][n.x] == 2.0): # up
-			neighbors.append(Node(n.x, n.y-2))
+		if graph[n.y-1][n.x] == EMPTY_BLOCKER: # up
+			n2 = Node(n.x, n.y-2)
+			if graph[n.y-2][n.x] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y+1][n.x] == 3.0) and (graph[n.y+2][n.x] == 2.0): # down
-			neighbors.append(Node(n.x, n.y+2))
+		if graph[n.y+1][n.x] == EMPTY_BLOCKER: # down
+			n2 = Node(n.x, n.y+2)
+			if graph[n.y+2][n.x] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x-1] == 3.0) and (graph[n.y][n.x-2] == 2.0): # left
-			neighbors.append(Node(n.x-2, n.y))
+		if graph[n.y][n.x-1] == EMPTY_BLOCKER: # left
+			n2 = Node(n.x-2, n.y)
+			if graph[n.y][n.x-2] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	try:
-		if (graph[n.y][n.x+1] == 3.0) and (graph[n.y][n.x+2] == 2.0): # right
-			neighbors.append(Node(n.x+2, n.y))
+		if graph[n.y][n.x+1] == EMPTY_BLOCKER: # right
+			n2 = Node(n.x+2, n.y)
+			if graph[n.y][n.x+2] == EMPTY_PAWN:
+				neighbors.append(n2)
+			elif not stop_recursive:
+				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
 	#print(f"neighbors: {neighbors}")
@@ -83,7 +107,7 @@ def shortestPath(graph, start:Node, target:Node):
 		u = openList.pop()
 		closedList.add(u)
 		if u.y == target.y: # Quoridor only need 'y' check
-			print("targeted !")
+			#print("targeted !")
 			path = retracePath(start, u)
 			return path
 		for v in getNeighbors(u, graph):
@@ -97,22 +121,23 @@ def shortestPath(graph, start:Node, target:Node):
 					v.parent = u
 					if v not in openList:
 						openList.append(v)
-	print("Error no path found")
+	#print("Error no path found")
 	return None
 
 # Global function usable in game
 def Pathfinder(board, me):
 	x, y = getPlayerPos(board, me)
 	start = Node(x, y, 0, 0)
-	if me == 0.0: # color 1
+	if me == PAWN1: # color 1
 		end = Node(8, 16) # target DOWN
-	elif me == 1.0: # color 2
+	elif me == PAWN2: # color 2
 		end = Node(8, 0) # target UP
 	return shortestPath(board, start, end)
 
 # Debug function to display path on game board
 def displayPath(board, path):
-	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
+	#table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
+	table = {PAWN1:'A', PAWN2:'B', EMPTY_PAWN:'.', EMPTY_BLOCKER:'-', 4.0:'#', IMP:' '}
 	display = [[0]*17 for _ in range(17)]
 
 	for y in range(len(board)):
