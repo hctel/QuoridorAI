@@ -109,7 +109,7 @@ def getNeighbors(board, x, y, stop_recursive=False):
 def getBlockers(board):
 	res = []
 	for y in range(1, len(board)-1, 2):
-		for x in range(0, len(board[0])-4, 2):
+		for x in range(0, len(board[0])-2, 2):
 			if (board[y][x]==EMPTY_BLOCKER and board[y][x+2]==EMPTY_BLOCKER) and not (board[y-1][x+1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y, x+2]]} # horizontal
 				newBoard = applyBoard(board, move)
@@ -117,7 +117,7 @@ def getBlockers(board):
 				opponentPath = Pathfinder(newBoard, PAWN2) # slow
 				if (playerPath != None) and (opponentPath != None): # ok legal move
 					res.append(move)
-	for y in range(0, len(board)-4, 2):
+	for y in range(0, len(board)-2, 2):
 		for x in range(1, len(board[0])-1, 2):
 			if (board[y][x]==EMPTY_BLOCKER and board[y+2][x]==EMPTY_BLOCKER) and not (board[y+1][x-1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y+2, x]]} # vertical
@@ -318,4 +318,4 @@ def run(state, weigths, timeout, fun):
 def calculate(state, weigths, timeout):
 	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
 
-#run(empty_input, [-10,1,0,0,0,0], 0.03, negamaxWithPruningIterativeDeepening)
+#run(empty_input, [-10,14,11,0,0,-5], 0.03, negamaxWithPruningIterativeDeepening)
