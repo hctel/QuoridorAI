@@ -110,7 +110,7 @@ def getBlockers(board):
 	res = []
 	for y in range(1, len(board)-1, 2):
 		for x in range(0, len(board[0])-4, 2):
-			if (board[y][x]==EMPTY_BLOCKER and board[y][x+2]==EMPTY_BLOCKER) and (board[y-1][x+1]==EMPTY_BLOCKER and board[y+1][x+1]==EMPTY_BLOCKER):
+			if (board[y][x]==EMPTY_BLOCKER and board[y][x+2]==EMPTY_BLOCKER) and not (board[y-1][x+1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y, x+2]]} # horizontal
 				newBoard = applyBoard(board, move)
 				playerPath = Pathfinder(newBoard, PAWN1) # slow
@@ -119,7 +119,7 @@ def getBlockers(board):
 					res.append(move)
 	for y in range(0, len(board)-4, 2):
 		for x in range(1, len(board[0])-1, 2):
-			if board[y][x]==EMPTY_BLOCKER and board[y+2][x]==EMPTY_BLOCKER and (board[y+1][x-1]==EMPTY_BLOCKER and board[y+1][x+1]==EMPTY_BLOCKER):
+			if (board[y][x]==EMPTY_BLOCKER and board[y+2][x]==EMPTY_BLOCKER) and not (board[y+1][x-1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y+2, x]]} # vertical
 				newBoard = applyBoard(board, move)
 				playerPath = Pathfinder(newBoard, PAWN1) # slow
