@@ -251,8 +251,13 @@ def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
 			possibilities = [(move, apply(state, move)) for move in moves(state)]
 			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
 			
+			sign = 1
+			if depth%2==0:
+				sign = -1
+
 			for move, successor in possibilities:
 				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
+				value *= sign
 
 				theOver = theOver and over
 				if value > theValue:
