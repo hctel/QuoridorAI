@@ -233,8 +233,8 @@ def Manhattan(board, pawn):
 	
 
 def heuristic(state, weigths, debug=False):
-	player = state['current']
-	opponent = abs(player-1) # 1->0 & 0->1
+	opponent = state['current']
+	player = abs(opponent-1) # 1->0 & 0->1
 
 	playerManhattan = Manhattan(state["board"], player)
 	opponentManhattan = Manhattan(state["board"], opponent)
@@ -262,50 +262,23 @@ def heuristic(state, weigths, debug=False):
 	#print("res: ", res)
 	return res
 
-def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
-	cache = defaultdict(lambda : 0)
-	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout, alpha=float('-inf'), beta=float('inf')):
-		over = gameOver(state)
-		if over or depth == 0:
-			res = -heuristic(state, weigths), None, over
-
-		else:
-			theValue, theMove, theOver = float('-inf'), None, True
-			possibilities = [(move, apply(state, move)) for move in moves(state)]
-			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
-			
-			sign = 1
-			if depth%2==0:
-				sign = -1
-
-			for move, successor in possibilities:
-				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
-				value *= sign
-
-				theOver = theOver and over
-				if value > theValue:
-					theValue, theMove = value, move
-				alpha = max(alpha, theValue)
-				if alpha >= beta:
-					break
-				#if time.time() - start > timeout:
-					#break
-			res = -theValue, theMove, theOver
-		cache[tuple(state)] = res[0]
-		return res
+def smoothFinder(state, weigths):
+	local_weigths = list(weigths)
+	p = state["current"] 
+	if state["blockers"][p] == 0:
+		# Just run to the end
+		local_weigths = [-10,0,-1,0,0,0]
 
 	value, move = 0, None
-	depth = 1
-	start = time.time()
-	over = False
+	theValue, theMove = float('-inf'), None
+	possibilities = [(move, apply(state, move)) for move in moves(state)]
 
-	while value > -9999 and time.time() - start < timeout and not over:
-		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout)
-		#print('value : ', value)
-		depth += 1
+	for move, successor in possibilities:
+		value = heuristic(successor, local_weigths)
+		if value > theValue:
+			theValue, theMove = value, move
 
-	print('depth =', depth)
-	return value, move
+	return theValue, theMove
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
@@ -316,8 +289,8 @@ def timeit(fun):
 	return wrapper
 
 @timeit
-def next(state, weigths, timeout, fun):
-	_, move = fun(state, weigths, timeout)
+def next(state, weigths, fun):
+	_, move = fun(state, weigths)
 	return move
 
 def show(board):
@@ -333,7 +306,7 @@ def show(board):
 			print(display[y][x], end=' ')
 		print('')
 
-def run(state, weigths, timeout, fun):
+def run(state, weigths, fun):
 	import hashlib
 
 	show(state['board'])
@@ -342,7 +315,7 @@ def run(state, weigths, timeout, fun):
 	print(m.hexdigest())
 	print('')
 	while not gameOver(state):
-		move = next(state, weigths, timeout, fun)
+		move = next(state, weigths, fun)
 		print(move)
 		state = apply(state, move)
 		show(state['board'])
@@ -354,9 +327,9 @@ def run(state, weigths, timeout, fun):
 		print('------------')
 
 # Network will call this function during game
-def calculate(state, weigths, timeout):
-	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
+def calculate(state, weigths):
+	return next(state, weigths, smoothFinder)
 
-#run(test_input, [-10,14,11,0,0,-5], 0.03, negamaxWithPruningIterativeDeepening)
-#run(loop_input, [14,-10,0,11,-5,0], 0.03, negamaxWithPruningIterativeDeepening)
-run(loop_input, [-14,0,0,0,0,0], 0.03, negamaxWithPruningIterativeDeepening)
+#run(test_input, [-10,14,-4,4,5,-5], smoothFinder)
+#run(loop_input, [14,-10,0,11,-5,0], negamaxWithPruningIterativeDeepening)
+#run(loop_input, [-14,0,0,0,0,0], negamaxWithPruningIterativeDeepening)
