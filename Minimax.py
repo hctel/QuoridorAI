@@ -168,7 +168,7 @@ def moves(state):
 	return res
 
 # need optimization !
-def cleanBoard(board, x, y, player):
+def cleanBoard(board, player):
 	for yc in range(len(board)):
 		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
@@ -194,7 +194,7 @@ def apply(state, move):
 	if t == "pawn":
 		y = move['position'][0][0]
 		x = move['position'][0][1]
-		cleanBoard(res["board"], x, y, player)
+		cleanBoard(res["board"], player)
 		res["board"][y][x] = player
 	elif t == "blocker":
 		res["blockers"][player] -= 1
