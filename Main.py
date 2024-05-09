@@ -7,6 +7,7 @@ fun_messages = ["Helo your compuder has virus", "Mais, vous savez, moi je ne cro
 
 lib = {'ef8e5a6037c09118dd25bcd96dd42e357997ffe554718775559583091e46910b':[{'type':"blocker", "position": [[15,8],[15,10]]}, {'type':"blocker", "position": [[1,8],[1,10]]}]}
 
+# Process incoming opponent moves and send player move
 def handleRcv(js, client):
     if js["request"] == "play":
         print(js["errors"])
@@ -33,7 +34,8 @@ def handleRcv(js, client):
             "message": fun_messages[random.randint(0,len(fun_messages)-1)]
         }
         network.send(client, json.dumps(response))
-        
+
+# Start a network instance for training session
 def train(port, w):
     global weights
     weights = w
@@ -46,7 +48,7 @@ def train(port, w):
     while True:
         time.sleep(1)
 
-
+# Main function for the championship
 if __name__ == "__main__":
     global weights
     weights = [-10,14,10,0,0,-5]

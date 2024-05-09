@@ -1,13 +1,6 @@
-from collections import defaultdict
-import time,sys,random
+import time, random
 from copy import deepcopy
 from Pathfinder import  *
-
-import random
-from Pathfinder import Pathfinder, getPlayerPos
-
-import sys
-sys.setrecursionlimit(9999)
 
 # Board tile values
 PAWN1 = 0
@@ -40,53 +33,7 @@ empty_input = {
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
 
-test_input = {
-  "players": ["LUR", "HSL"],
-  "current": 0,
-  "blockers": [10, 10],
-   "board": [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
-}
-
-loop_input = {
-  "players": ["LUR", "HSL"],
-  "current": 1,
-  "blockers": [0, 0],
-   "board": [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
-}
-
-# Return list of accessible cells
+# Return the list of accessible cells
 def getNeighbors(board, x, y, stop_recursive=False):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
@@ -126,9 +73,10 @@ def getNeighbors(board, x, y, stop_recursive=False):
 				neighbors.extend(getNeighbors(board, x+2, y, stop_recursive=True))
 	except:
 		pass
-	#print(f"neighbors: {neighbors}")
+
 	return neighbors
 
+# Return the move's list of valid blockers
 def getBlockers(board):
 	res = []
 	for y in range(1, len(board)-1, 2):
@@ -152,6 +100,7 @@ def getBlockers(board):
 	#print("len(res) = ", len(res))
 	return res
 
+# Return the list of valid moves (player + blockers)
 def moves(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state["board"], p)
@@ -167,13 +116,14 @@ def moves(state):
 	res = playerMoves + blockers
 	return res
 
-# need optimization !
+# Remove player from (local) board
 def cleanBoard(board, player):
 	for yc in range(len(board)):
 		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
 				board[yc][xc] = EMPTY_PAWN
 
+# Apply a blocker move
 def applyBoard(board, move):
 	res = deepcopy(board)
 
@@ -186,6 +136,7 @@ def applyBoard(board, move):
 
 	return res
 
+# Apply any move (player or blocker) and switch player
 def apply(state, move):
 	player = currentPlayer(state)
 	res = deepcopy(state)
@@ -208,6 +159,7 @@ def apply(state, move):
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
 
+# Return the winner
 def winner(state):
 	_, p1y = getPlayerPos(state['board'], PAWN1)
 	_, p2y = getPlayerPos(state['board'], PAWN2)
@@ -217,22 +169,26 @@ def winner(state):
 		return PAWN2
 	return None
 
+# Return the end of game condition
 def gameOver(state):
 	if winner(state) is not None:
 		return True
-	
+
+# Return the current player that must play
 def currentPlayer(state):
 	return state['current']
 
+# Return the manhattan (direct) distance
 def Manhattan(board, pawn):
 	x, y = getPlayerPos(board, pawn)
 	if pawn == PAWN1:
 		return 16-y
 	else:
 		return y
-	
 
+# Return the score of a board state from the current player's perspective
 def heuristic(state, weigths, debug=False):
+	# player and opponent are switched cause "apply()" already change "current"
 	opponent = state['current']
 	player = abs(opponent-1) # 1->0 & 0->1
 
@@ -262,9 +218,10 @@ def heuristic(state, weigths, debug=False):
 	#print("res: ", res)
 	return res
 
+# Core of best move searching algorithm
 def smoothFinder(state, weigths):
 	local_weigths = list(weigths)
-	p = state["current"] 
+	p = state["current"]
 	if state["blockers"][p] == 0:
 		# Just run to the end
 		local_weigths = [-10,0,-1,0,0,0]
@@ -280,6 +237,7 @@ def smoothFinder(state, weigths):
 
 	return theValue, theMove
 
+# Timing decorator
 def timeit(fun):
 	def wrapper(*args, **kwargs):
 		start = time.time()
@@ -288,11 +246,13 @@ def timeit(fun):
 		return res
 	return wrapper
 
+# Call the algorithm and return the move
 @timeit
 def next(state, weigths, fun):
 	_, move = fun(state, weigths)
 	return move
 
+# Debug function to display game board
 def show(board):
 	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
 	display = [[0]*17 for _ in range(17)]
@@ -306,6 +266,7 @@ def show(board):
 			print(display[y][x], end=' ')
 		print('')
 
+# Runner to test and debug in local
 def run(state, weigths, fun):
 	import hashlib
 
@@ -326,10 +287,9 @@ def run(state, weigths, fun):
 			print(state["board"])
 		print('------------')
 
-# Network will call this function during game
+# Global function usable in game
+# Network class will call this function during game
 def calculate(state, weigths):
 	return next(state, weigths, smoothFinder)
 
-#run(test_input, [-10,14,-4,4,5,-5], smoothFinder)
-#run(loop_input, [14,-10,0,11,-5,0], negamaxWithPruningIterativeDeepening)
-#run(loop_input, [-14,0,0,0,0,0], negamaxWithPruningIterativeDeepening)
+#run(empty_input, [-10,14,-4,4,-5,5], smoothFinder)

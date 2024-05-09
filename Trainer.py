@@ -1,5 +1,5 @@
 import multiprocessing as mp
-import sys, Main
+import Main
 from random import randint, uniform
 number_of_cores = 22
 start_port = 3001
@@ -10,8 +10,8 @@ at = True
 
 def run(port, w):
     Main.train(port, w)   
-    
 
+# Training function to find the best weights for the searching algorithm
 if __name__ == "__main__":
     if at :
         processes = []
