@@ -20,13 +20,11 @@ def handleRcv(js, client):
         if board_index in lib.keys():
             move = lib[board_index][int(js["state"]["current"])]
         else:
-            calculated = False
-            while not calculated:
-                try:
-                    move = calculate(js["state"], weights, 0.03)
-                    calculated = True
-                except:
-                    pass
+            try:
+                move = calculate(js["state"], weights)
+            except:
+                print("Exception !")
+                show(js["state"]["board"])
 
         response = {
             "response": "move",
@@ -34,6 +32,8 @@ def handleRcv(js, client):
             "message": fun_messages[random.randint(0,len(fun_messages)-1)]
         }
         network.send(client, json.dumps(response))
+    else:
+        print(js)
 
 # Start a network instance for training session
 def train(port, w):
