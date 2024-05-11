@@ -4,7 +4,7 @@ CUSTOM = 2
 
 
 import multiprocessing as mp
-import sys, Main
+import Main
 from random import randint, uniform
 number_of_cores = 22
 start_port = 3001
@@ -17,8 +17,8 @@ custom_weights = [[-5,5,7,13,-4,11],[-8,4,2,16,1,10],[-8,7,13,-9,7,-4],[-13,-12,
 
 def run(port, w):
     Main.train(port, w)   
-    
 
+# Training function to find the best weights for the searching algorithm
 if __name__ == "__main__":
     if mode == INIT :
         processes = []

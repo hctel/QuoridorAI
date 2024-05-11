@@ -1,13 +1,13 @@
 from functools import cmp_to_key
 from math import sqrt
 
-# Board tile values
+# Board tiles values
 PAWN1 = 0
 PAWN2 = 1
 EMPTY_PAWN = 2
 EMPTY_BLOCKER = 3
 BLOCKER = 4
-IMP = 5  # for places where no blockers and pawns can be
+IMP = 5  # for tiles where no blockers and pawns can be
 
 # Return player position on the game board
 def getPlayerPos(board, me):
@@ -17,7 +17,7 @@ def getPlayerPos(board, me):
 				return x, y
 	return None # not found
 
-# Node class to represent game board as connected Nodes
+# Node class to represent game board path as connected Nodes
 class Node:
 	def __init__(self, x, y, cost=0, heuristic=0):
 		self.x = x
@@ -84,7 +84,6 @@ def getNeighbors(n:Node, graph, stop_recursive=False):
 				neighbors.extend(getNeighbors(n2, graph, stop_recursive=True))
 	except:
 		pass
-	#print(f"neighbors: {neighbors}")
 	return neighbors
 
 # Retrace the final shortest path (A->B)
@@ -107,7 +106,6 @@ def shortestPath(graph, start:Node, target:Node):
 		u = openList.pop()
 		closedList.add(u)
 		if u.y == target.y: # Quoridor only need 'y' check
-			#print("targeted !")
 			path = retracePath(start, u)
 			return path
 		for v in getNeighbors(u, graph):

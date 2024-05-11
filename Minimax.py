@@ -1,13 +1,6 @@
-from collections import defaultdict
-import time,sys,random
+import time, random
 from copy import deepcopy
 from Pathfinder import  *
-
-import random
-from Pathfinder import Pathfinder, getPlayerPos
-
-import sys
-sys.setrecursionlimit(9999)
 
 # Board tile values
 PAWN1 = 0
@@ -40,30 +33,7 @@ empty_input = {
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 }
 
-test_input = {
-  "players": ["LUR", "HSL"],
-  "current": 0,
-  "blockers": [10, 10],
-   "board": [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 4.0, 2.0, 4.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
-}
-
-# Return list of accessible cells
+# Return the list of accessible cells
 def getNeighbors(board, x, y, stop_recursive=False):
 	neighbors = []
 	# (try > if) more efficient if (except happen < 50%)
@@ -103,13 +73,14 @@ def getNeighbors(board, x, y, stop_recursive=False):
 				neighbors.extend(getNeighbors(board, x+2, y, stop_recursive=True))
 	except:
 		pass
-	#print(f"neighbors: {neighbors}")
+
 	return neighbors
 
+# Return the move's list of valid blockers
 def getBlockers(board):
 	res = []
 	for y in range(1, len(board)-1, 2):
-		for x in range(0, len(board[0])-4, 2):
+		for x in range(0, len(board[0])-2, 2):
 			if (board[y][x]==EMPTY_BLOCKER and board[y][x+2]==EMPTY_BLOCKER) and not (board[y-1][x+1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y, x+2]]} # horizontal
 				newBoard = applyBoard(board, move)
@@ -117,7 +88,7 @@ def getBlockers(board):
 				opponentPath = Pathfinder(newBoard, PAWN2) # slow
 				if (playerPath != None) and (opponentPath != None): # ok legal move
 					res.append(move)
-	for y in range(0, len(board)-4, 2):
+	for y in range(0, len(board)-2, 2):
 		for x in range(1, len(board[0])-1, 2):
 			if (board[y][x]==EMPTY_BLOCKER and board[y+2][x]==EMPTY_BLOCKER) and not (board[y+1][x-1]==BLOCKER and board[y+1][x+1]==BLOCKER):
 				move = {'type':"blocker", 'position':[[y, x], [y+2, x]]} # vertical
@@ -129,6 +100,7 @@ def getBlockers(board):
 	#print("len(res) = ", len(res))
 	return res
 
+# Return the list of valid moves (player + blockers)
 def moves(state):
 	p = currentPlayer(state)
 	x, y = getPlayerPos(state["board"], p)
@@ -144,13 +116,14 @@ def moves(state):
 	res = playerMoves + blockers
 	return res
 
-# need optimization !
-def cleanBoard(board, x, y, player):
+# Remove player from (local) board
+def cleanBoard(board, player):
 	for yc in range(len(board)):
 		for xc in range(len(board[0])):
 			if board[yc][xc] == player:
 				board[yc][xc] = EMPTY_PAWN
 
+# Apply a blocker move
 def applyBoard(board, move):
 	res = deepcopy(board)
 
@@ -163,6 +136,7 @@ def applyBoard(board, move):
 
 	return res
 
+# Apply any move (player or blocker) and switch player
 def apply(state, move):
 	player = currentPlayer(state)
 	res = deepcopy(state)
@@ -171,7 +145,7 @@ def apply(state, move):
 	if t == "pawn":
 		y = move['position'][0][0]
 		x = move['position'][0][1]
-		cleanBoard(res["board"], x, y, player)
+		cleanBoard(res["board"], player)
 		res["board"][y][x] = player
 	elif t == "blocker":
 		res["blockers"][player] -= 1
@@ -185,6 +159,7 @@ def apply(state, move):
 	res["current"] = abs(res["current"]-1) # switch player
 	return res
 
+# Return the winner
 def winner(state):
 	_, p1y = getPlayerPos(state['board'], PAWN1)
 	_, p2y = getPlayerPos(state['board'], PAWN2)
@@ -194,24 +169,28 @@ def winner(state):
 		return PAWN2
 	return None
 
+# Return the end of game condition
 def gameOver(state):
 	if winner(state) is not None:
 		return True
-	
+
+# Return the current player that must play
 def currentPlayer(state):
 	return state['current']
 
+# Return the manhattan (direct) distance
 def Manhattan(board, pawn):
 	x, y = getPlayerPos(board, pawn)
 	if pawn == PAWN1:
 		return 16-y
 	else:
 		return y
-	
 
+# Return the score of a board state from the current player's perspective
 def heuristic(state, weigths, debug=False):
-	player = state['current']
-	opponent = abs(player-1) # 1->0 & 0->1
+	# player and opponent are switched cause "apply()" already change "current"
+	opponent = state['current']
+	player = abs(opponent-1) # 1->0 & 0->1
 
 	playerManhattan = Manhattan(state["board"], player)
 	opponentManhattan = Manhattan(state["board"], opponent)
@@ -239,46 +218,26 @@ def heuristic(state, weigths, debug=False):
 	#print("res: ", res)
 	return res
 
-def negamaxWithPruningIterativeDeepening(state, weigths, timeout):
-	cache = defaultdict(lambda : 0)
-	def cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout, alpha=float('-inf'), beta=float('inf')):
-		over = gameOver(state)
-		if over or depth == 0:
-			res = -heuristic(state, weigths), None, over
-
-		else:
-			theValue, theMove, theOver = float('-inf'), None, True
-			possibilities = [(move, apply(state, move)) for move in moves(state)]
-			possibilities.sort(key=lambda poss: cache[tuple(poss[1])])
-			
-			for move, successor in possibilities:
-				value, _, over = cachedNegamaxWithPruningLimitedDepth(successor, weigths, depth-1, start, timeout, -beta, -alpha)
-
-				theOver = theOver and over
-				if value > theValue:
-					theValue, theMove = value, move
-				alpha = max(alpha, theValue)
-				if alpha >= beta:
-					break
-				#if time.time() - start > timeout:
-					#break
-			res = -theValue, theMove, theOver
-		cache[tuple(state)] = res[0]
-		return res
+# Core of best move searching algorithm
+def smoothFinder(state, weigths):
+	local_weigths = list(weigths)
+	p = state["current"]
+	if state["blockers"][p] == 0:
+		# Just run to the end
+		local_weigths = [-10,0,-1,0,0,0]
 
 	value, move = 0, None
-	depth = 1
-	start = time.time()
-	over = False
+	theValue, theMove = float('-inf'), None
+	possibilities = [(move, apply(state, move)) for move in moves(state)]
 
-	while value > -9999 and time.time() - start < timeout and not over:
-		value, move, over = cachedNegamaxWithPruningLimitedDepth(state, weigths, depth, start, timeout)
-		#print('value : ', value)
-		depth += 1
+	for move, successor in possibilities:
+		value = heuristic(successor, local_weigths)
+		if value > theValue:
+			theValue, theMove = value, move
 
-	print('depth =', depth)
-	return value, move
+	return theValue, theMove
 
+# Timing decorator
 def timeit(fun):
 	def wrapper(*args, **kwargs):
 		start = time.time()
@@ -287,13 +246,14 @@ def timeit(fun):
 		return res
 	return wrapper
 
+# Call the algorithm and return the move
 @timeit
-def next(state, weigths, timeout, fun):
-	_, move = fun(state, weigths, timeout)
+def next(state, weigths, fun):
+	_, move = fun(state, weigths)
 	return move
 
+# Debug function to display game board
 def show(board):
-	print('')
 	table = {0.0:'A', 1.0:'B', 2.0:'.', 3.0:'-', 4.0:'#', 5.0:' '}
 	display = [[0]*17 for _ in range(17)]
 
@@ -306,16 +266,30 @@ def show(board):
 			print(display[y][x], end=' ')
 		print('')
 
-def run(state, weigths, timeout, fun):
+# Runner to test and debug in local
+def run(state, weigths, fun):
+	import hashlib
+
 	show(state['board'])
+	m = hashlib.sha256()
+	m.update(str(state["board"]).encode("utf-8"))
+	print(m.hexdigest())
+	print('')
 	while not gameOver(state):
-		move = next(state, weigths, timeout, fun)
+		move = next(state, weigths, fun)
 		print(move)
 		state = apply(state, move)
 		show(state['board'])
+		m = hashlib.sha256()
+		m.update(str(state["board"]).encode("utf-8"))
+		print(m.hexdigest())
+		if input("?") == "p":
+			print(state["board"])
+		print('------------')
 
-# Network will call this function during game
-def calculate(state, weigths, timeout):
-	return next(state, weigths, timeout, negamaxWithPruningIterativeDeepening)
+# Global function usable in game
+# Network class will call this function during game
+def calculate(state, weigths):
+	return next(state, weigths, smoothFinder)
 
-#run(empty_input, [-10,1,0,0,0,0], 0.03, negamaxWithPruningIterativeDeepening)
+#run(empty_input, [-10,14,-4,4,-5,5], smoothFinder)
