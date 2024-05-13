@@ -6,7 +6,7 @@ CUSTOM = 2
 import multiprocessing as mp
 import Main
 from random import randint, uniform
-number_of_cores = 22
+number_of_cores = 6
 start_port = 3001
 
 center_weights = [0,0,0,0,0,0]

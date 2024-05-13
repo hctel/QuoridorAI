@@ -50,9 +50,11 @@ def train(port, w):
 # Main function for the championship
 if __name__ == "__main__":
     global weights
-    weights = [-10,14,10,0,0,-5]
+    #[-9,5,2,15,2,11]
+    #[-13,10,-1,-13,-4,-5]
+    weights = [-13,10,-1,-13,-4,-5]
     global network
-    network = Network("10.0.0.153", 3000, 3310, handleRcv, "Je m'appelle teuse", "[\"22054\", \"22167\"]")
+    network = Network("10.0.0.153", 3000, 3310, handleRcv, "Not-a-Virus.exe", "[\"22054\", \"22167\"]")
     if network.isSubscribed:
         print("Registered with server! Yay!")
     else: 
