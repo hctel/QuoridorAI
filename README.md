@@ -15,7 +15,16 @@ Cette classe gère la connection réseau avec le gestionnaire de partie (GP). El
 ### Fichier Trainer.py
 Ce fichier nous a permis de déterminer les meilleures pondérations à utiliser dans notre algorithme, en utilisant une forme de génétique algorithmique. Il crée n instances de notre IA avec, au départ, des poids au hasard. Ensuite, nous fournissons en paramètre les poids ayant obtenu le meilleur score sur un pool, et recréons n instances avec de petites altérations sur les poids fournis.
 
-
+## Bibliothèques utilisées
+time : chronomètre durant le debug et attente pour que les threads fonctionnent correctement
+json : encoder et décoder des objets au format JSON
+random : générateur de nombre aléatoire durant l'entrainement
+hashlib : hashage du plateau de jeu
+socket : gérer tout le fonctionnement réseau
+threading : créer des threads qui fonctionnent en parrallèle
+multiprocessing : créer de réels processus séparés
+copy : pour copier de multiple listes imbriquées
+functools : permet de créer une clé de comparaison pour le tri
 
 
 
