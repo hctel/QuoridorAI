@@ -12,7 +12,7 @@ Puis il parcourt cette liste de coups en leur attribuant un score en fonction de
 ### Classe Network
 Cette classe gère la connection réseau avec le gestionnaire de partie (GP). Elle se comporte en tant que client pour l'inscription de notre client auprès du GP, puis en tant que serveur pour répondre entre autres aux requètes de ping et de coup. 
 
-### Ficier Trainer.py
+### Fichier Trainer.py
 Ce fichier nous a permis de déterminer les meilleures pondérations à utiliser dans notre algorithme, en utilisant une forme de génétique algorithmique. Il crée n instances de notre IA avec, au départ, des poids au hasard. Ensuite, nous fournissons en paramètre les poids ayant obtenu le meilleur score sur un pool, et recréons n instances avec de petites altérations sur les poids fournis.
 
 
